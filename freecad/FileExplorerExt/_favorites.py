@@ -212,27 +212,29 @@ class FavoritesWidget(qtw.QListView):
         # Handle URLs (from file system)
         if mime_data.hasUrls():
             for url in mime_data.urls():
-                if path := url.toLocalFile():
-                    self.add_path(path)
-            event.acceptProposedAction()
+                if (path := url.toLocalFile()) and self.add_path(path):
+                    event.acceptProposedAction()
 
         # Handle text (file path from tree view)
         elif mime_data.hasText():
             path = mime_data.text()
-            if path:
-                self.add_path(path)
-            event.acceptProposedAction()
+            if path and self.add_path(path):
+                event.acceptProposedAction()
 
-    def add_path(self, path: str) -> None:
+    def add_path(self, path: str) -> bool:
+        if not Path(path).is_dir():
+            return False
         try:
             self._model.addItem(Favorite(path))
             self._state.save_favorites(self._model.get_state())
+            return True
         except DuplicatedFavoriteError:
             qtw.QMessageBox.warning(
                 self,
                 tr("FileExplorerExt", "Duplicated"),
                 tr("FileExplorerExt", "Duplicated favorite"),
             )
+        return False
 
     def on_context_menu(self, position: qtc.QPoint) -> None:
         index = self.indexAt(position)
