@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # SPDX-FileCopyrightText: 2025 Frank David Martínez Muñoz
+# SPDX-FileNotice: Part of the File Explorer addon.
 
 """
 FileExplorerExt: Persistent state.
