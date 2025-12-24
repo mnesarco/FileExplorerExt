@@ -18,3 +18,7 @@ if TYPE_CHECKING:
     import PySide6.QtGui as qtg
     import PySide6.QtWidgets as qtw
 
+try:
+    IS_QT6_SUPPORTED = qtc.qVersion().startswith("6.")
+except Exception:
+    IS_QT6_SUPPORTED = False

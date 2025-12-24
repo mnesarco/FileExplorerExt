@@ -1,6 +1,6 @@
 <package format="1">
-    <name>FileExplorerExt</name>
-    <description>FreeCAD File Explorer</description>
+    <name>File Explorer</name>
+    <description>Integrated File Explorer (Requires Qt6)</description>
     <version>1.0.0.dev0</version>
     <content>
         <!-- Gui Utils -->

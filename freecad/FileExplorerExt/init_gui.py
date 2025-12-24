@@ -2,6 +2,11 @@
 # SPDX-FileCopyrightText: 2025 Frank David Martínez Muñoz
 # SPDX-FileNotice: Part of the File Explorer addon.
 
-from . import _explorer
+from ._qt import IS_QT6_SUPPORTED
 
-_explorer.show()
+if not IS_QT6_SUPPORTED:
+    import FreeCAD as App
+    App.Console.PrintWarning("FileExplorer requires Qt6")
+else:
+    from . import _explorer
+    _explorer.show()
