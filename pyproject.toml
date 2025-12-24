@@ -1,0 +1,18 @@
+[project]
+name = "FileExplorerExt"
+version = "1.0.0.dev0"
+description = "FreeCAD File Explorer"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "freecad-stubs>=1.0.21",
+    "pyside6>=6.10.1",
+    "ruff>=0.14.10",
+]
+
+[tool.ruff]
+line-length = 100
+indent-width = 4
