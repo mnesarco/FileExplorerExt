@@ -31,6 +31,7 @@ class FileExplorerWidget(qtw.QWidget):
     preview: PreviewPanel
     favorites: FavoritesWidget
     status: qtw.QStatusBar
+    read_only_toggle: qtw.QToolButton
 
     def __init__(self, parent: qtw.QWidget | None = None) -> None:
         super().__init__(parent)
@@ -81,13 +82,32 @@ class FileExplorerWidget(qtw.QWidget):
         toolbar.addWidget(filter_input)
         return toolbar
 
+    def build_statusbar(self) -> qtw.QStatusBar:
+        status = qtw.QStatusBar(self)
+        read_only_toggle = qtw.QToolButton()
+        read_only_toggle.setCheckable(True)
+        read_only_toggle.setToolButtonStyle(qtc.Qt.ToolButtonStyle.ToolButtonTextOnly)
+        read_only_toggle.setToolTip(tr("FileExplorerExt", "Read only"))
+        read_only_toggle.toggled.connect(self.on_toggle_readonly)
+        read_only_toggle.setFocusPolicy(qtc.Qt.FocusPolicy.NoFocus)
+        status.addPermanentWidget(read_only_toggle)
+        self.read_only_toggle = read_only_toggle
+        read_only_toggle.toggle()
+        return status
+
+    def on_toggle_readonly(self, ro: bool) -> None:
+        toggle = self.read_only_toggle
+        toggle.setText(tr("FileExplorerExt", "ro") if ro else tr("FileExplorerExt", "rw"))
+        toggle.setToolTip(tr("FileExplorerExt", "Read only") if ro else tr("FileExplorerExt", "Read/Write"))
+        self.tree.setReadOnly(ro)
+
     def init_ui(self) -> None:
         self.tree = FileTree(self._state, self)
         self.preview = PreviewPanel(self._state, self)
         self.favorites = FavoritesWidget(self._state, self)
         left_sidebar = self.build_sidebar()
         top_toolbar = self.build_top_toolbar()
-        self.status = qtw.QStatusBar(self)
+        self.status = self.build_statusbar()
 
         splitter = qtw.QSplitter(qtc.Qt.Horizontal)
         splitter.addWidget(left_sidebar)

@@ -14,6 +14,7 @@ import FreeCAD as App
 from ._files import duplicate_file, import_file, open_file
 from ._history import History
 from ._qt import qtc, qtg
+from ._intl import tr
 
 
 class State(qtc.QObject):
@@ -45,10 +46,18 @@ class State(qtc.QObject):
         qtg.QDesktopServices.openUrl(url)
 
     def import_file(self, path: str) -> None:
-        import_file(path)
+        try:
+            import_file(path)
+        except Exception:
+            msg = tr("FileExplorerExt", "File {} could not be imported").format(path)
+            App.Console.PrintUserWarning(f"{msg}\n")
 
     def open_file(self, path: str) -> None:
-        open_file(path)
+        try:
+            open_file(path)
+        except Exception:
+            msg = tr("FileExplorerExt", "File {} could not be opened").format(path)
+            App.Console.PrintUserWarning(f"{msg}\n")
 
     def duplicate_file(self, path: str) -> None:
         duplicate_file(path)

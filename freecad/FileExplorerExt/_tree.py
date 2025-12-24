@@ -48,7 +48,6 @@ class FileTree(qtw.QTreeView):
         self.setColumnWidth(0, 300)
         self.setUniformRowHeights(True)
         self.setContextMenuPolicy(qtc.Qt.ContextMenuPolicy.CustomContextMenu)
-
         self.activated.connect(self.on_activated)
         self.clicked.connect(self.on_activated)
         self.doubleClicked.connect(self.on_double_click)
@@ -151,3 +150,15 @@ class FileTree(qtw.QTreeView):
                 self._model.setNameFilters([f"*{text}*"])
         else:
             self._model.setNameFilters([])
+
+    def setReadOnly(self, ro: bool) -> None:
+        self._model.setReadOnly(ro)
+        self.setDragDropMode(
+            qtw.QAbstractItemView.DragDropMode.DragOnly
+            if ro
+            else qtw.QAbstractItemView.DragDropMode.DragDrop
+        )
+        self.setDragEnabled(True)
+        self.setDefaultDropAction(qtc.Qt.DropAction.MoveAction)
+        self.setAcceptDrops(not ro)
+        self.setDropIndicatorShown(not ro)
