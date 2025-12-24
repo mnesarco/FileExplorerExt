@@ -3,7 +3,11 @@
     <description>Integrated File Explorer (Requires Qt6)</description>
     <version>1.0.0.dev0</version>
     <content>
-        <!-- Gui Utils -->
+        <other>
+            <name>File Explorer</name>
+            <description>Integrated File Explorer (Requires Qt6)</description>
+            <version>1.0.0.dev0</version>
+        </other>
     </content>
     <date>2025-12-23</date>
     <pythonmin>3.10</pythonmin>
