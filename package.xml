@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
     <name>File Explorer</name>
-    <description>Integrated File Explorer</description>
+    <description>Integrated file system viewer.</description>
     <version>1.0.0-dev0</version>
     <date>2025-12-23</date>
     <icon>freecad/FileExplorerExt/resources/icon.svg</icon>
@@ -14,10 +14,19 @@
     <maintainer email="mnesarco@gmail.com">Frank David Martínez Muñoz</maintainer>
     <author email="mnesarco@gmail.com">Frank David Martínez Muñoz</author>
 
-    <tag>file</tag>
-    <tag>project</tag>
-    <tag>browser</tag>
+    <tag>Explorer</tag>
+    <tag>Navigate</tag>
+    <tag>Preview</tag>
+    <tag>Project</tag>
+    <tag>Browser</tag>
+    <tag>Import</tag>
+    <tag>Folder</tag>
+    <tag>Panel</tag>
+    <tag>Dock</tag>
+    <tag>File</tag>
 
+    <url type="documentation">https://github.com/mnesarco/FileExplorerExt</url>
+    <url type="bugtracker">https://github.com/mnesarco/FileExplorerExt/issues</url>
     <url type="readme">https://github.com/mnesarco/FileExplorerExt/blob/main/README.md</url>
     <url type="repository" branch="main">https://github.com/mnesarco/FileExplorerExt</url>
 
