@@ -98,7 +98,9 @@ class FileExplorerWidget(qtw.QWidget):
     def on_toggle_readonly(self, ro: bool) -> None:
         toggle = self.read_only_toggle
         toggle.setText(tr("FileExplorerExt", "ro") if ro else tr("FileExplorerExt", "rw"))
-        toggle.setToolTip(tr("FileExplorerExt", "Read only") if ro else tr("FileExplorerExt", "Read/Write"))
+        toggle.setToolTip(
+            tr("FileExplorerExt", "Read only") if ro else tr("FileExplorerExt", "Read/Write")
+        )
         self.tree.setReadOnly(ro)
 
     def init_ui(self) -> None:

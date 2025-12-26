@@ -16,18 +16,15 @@ import FreeCADGui as Gui
 
 from ._qt import qtg
 
-SUPPORTED_IMAGE_FORMATS = set([
-    f".{str(f, 'utf-8')}".lower()
-    for f in qtg.QImageReader.supportedImageFormats()
-])
+SUPPORTED_IMAGE_FORMATS = set(
+    [f".{str(f, 'utf-8')}".lower() for f in qtg.QImageReader.supportedImageFormats()]
+)
 
 
 def is_image_file(file_path: str) -> bool:
     """Return True if Qt can read the image format."""
     path = Path(file_path)
-    return (
-        (path.suffix or "").lower() in SUPPORTED_IMAGE_FORMATS
-    ) and path.exists()
+    return ((path.suffix or "").lower() in SUPPORTED_IMAGE_FORMATS) and path.exists()
 
 
 def is_fcstd_file(file_path: str) -> bool:

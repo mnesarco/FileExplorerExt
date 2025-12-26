@@ -165,17 +165,13 @@ class FavoritesWidget(qtw.QListView):
     ) -> None:
         super().__init__(parent)
         self.setObjectName("FileExplorerExt_Favorites")
-        user_data = [
-            Favorite(path, name) for path, name in state.get_favorites()
-        ]
+        user_data = [Favorite(path, name) for path, name in state.get_favorites()]
         self._model = FavoritesModel(user_data, self)
         self._state = state
         self.setModel(self._model)
         self.setAcceptDrops(True)
         self.setDragEnabled(True)
-        self.setSelectionMode(
-            qtw.QAbstractItemView.SelectionMode.SingleSelection
-        )
+        self.setSelectionMode(qtw.QAbstractItemView.SelectionMode.SingleSelection)
         self.setContextMenuPolicy(qtc.Qt.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self.on_context_menu)
         self.setIconSize(qtc.QSize(16, 16))
@@ -282,12 +278,7 @@ class FavoritesWidget(qtw.QListView):
             fav.name,
         )
 
-        if (
-            ok
-            and new_name
-            and new_name != fav.name
-            and not self._model.contains_name(new_name)
-        ):
+        if ok and new_name and new_name != fav.name and not self._model.contains_name(new_name):
             fav.name = new_name
             self._state.save_favorites(self._model.get_state())
             self._model.dataChanged.emit(index, index)

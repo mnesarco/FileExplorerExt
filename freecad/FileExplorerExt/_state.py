@@ -34,9 +34,7 @@ class State(qtc.QObject):
         super().__init__(parent)
         self._current_path = ""
         self._history = History()
-        self.passive_tree_root_changed.connect(
-            self.on_passive_tree_root_changed
-        )
+        self.passive_tree_root_changed.connect(self.on_passive_tree_root_changed)
 
     def get_last_path(self) -> str:
         return self._current_path or str(Path.home())
