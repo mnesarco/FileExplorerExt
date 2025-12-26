@@ -18,4 +18,11 @@ This is a small Addon to bring an internal file explorer to FreeCAD with integra
 - Drag & Drop
 - Context menu actions
 
+# Prerequisite
+
+- Qt6
+
+# Forum
+
+https://forum.freecad.org/viewtopic.php?t=102035
 
