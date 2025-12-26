@@ -15,4 +15,7 @@ This is a small Addon to bring an internal file explorer to FreeCAD with integra
 - Browse in system file explorer
 - Preview panel (Images and FreeCAD files)
 - Dockable
+- Drag & Drop
+- Context menu actions
+
 
