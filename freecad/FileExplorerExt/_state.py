@@ -23,17 +23,19 @@ class State(qtc.QObject):
     """
 
     path_changed: qtc.Signal = qtc.Signal(str)
-    favorite_selected: qtc.Signal = qtc.Signal(str)
+    request_root_change: qtc.Signal = qtc.Signal(str)
     tree_root_changed: qtc.Signal = qtc.Signal(str)
     passive_tree_root_changed: qtc.Signal = qtc.Signal(str)
 
     _current_path: str
     _history: History
+    _navigating: bool
 
     def __init__(self, parent: qtc.QObject | None = None):
         super().__init__(parent)
         self._current_path = ""
         self._history = History()
+        self._navigating = False
         self.passive_tree_root_changed.connect(self.on_passive_tree_root_changed)
 
     def get_last_path(self) -> str:
@@ -61,15 +63,21 @@ class State(qtc.QObject):
         duplicate_file(path)
 
     def on_passive_tree_root_changed(self, path: str) -> None:
-        self._history.add(path)
+        if not self._navigating:
+            self._history.add(path)
+
+    def _navigate(self, path: str) -> None:
+        self._navigating = True
+        self.request_root_change.emit(path)
+        self._navigating = False
 
     def navigate_back(self) -> None:
         if back := self._history.go_back():
-            self.favorite_selected.emit(back)
+            self._navigate(back)
 
     def navigate_forward(self) -> None:
         if forward := self._history.go_forward():
-            self.favorite_selected.emit(forward)
+            self._navigate(forward)
 
     def get_favorites(self) -> list[tuple[str, str]]:
         path = Path(App.getUserConfigDir()) / "file_explorer.json"

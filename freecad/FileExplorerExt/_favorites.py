@@ -188,11 +188,13 @@ class FavoritesWidget(qtw.QListView):
             self.selectionModel().select(
                 index, qtc.QItemSelectionModel.SelectionFlag.ClearAndSelect
             )
+        else:
+            self.selectionModel().clear()
 
     def on_activated(self, index: qtc.QModelIndex) -> None:
         if index.isValid():
             path = self._model.getItem(index.row())
-            self._state.favorite_selected.emit(path.path)
+            self._state.request_root_change.emit(path.path)
 
     def dragEnterEvent(self, event: qtg.QDragEnterEvent) -> None:
         if event.mimeData().hasUrls() or event.mimeData().hasText():

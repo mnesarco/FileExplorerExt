@@ -45,7 +45,7 @@ class FileExplorerWidget(qtw.QWidget):
         # Restore last location if available
         last_location = self._state.get_last_path()
         if last_location and Path(last_location).is_dir():
-            self._state.favorite_selected.emit(last_location)
+            self._state.request_root_change.emit(last_location)
 
     def build_sidebar(self) -> qtw.QWidget:
         container = qtw.QWidget()

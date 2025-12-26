@@ -6,7 +6,6 @@
 FileExplorerExt: Navigation history.
 """
 
-
 class History:
     back: list[str]
     forward: list[str]
@@ -18,13 +17,16 @@ class History:
     def add(self, path: str) -> None:
         if not self.back or self.back[-1] != path:
             self.back.append(path)
+            self.forward.clear()
 
     def go_back(self) -> str | None:
-        if self.back:
+        if len(self.back) > 1:
             self.forward.append(self.back.pop())
-        return self.back[-1] if self.back else None
+            return self.back[-1]
+        return None
 
     def go_forward(self) -> str | None:
         if self.forward:
-            return self.forward.pop()
+            self.back.append(self.forward.pop())
+            return self.back[-1]
         return None

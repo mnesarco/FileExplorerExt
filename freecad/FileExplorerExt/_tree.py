@@ -52,11 +52,12 @@ class FileTree(qtw.QTreeView):
         self.clicked.connect(self.on_activated)
         self.doubleClicked.connect(self.on_double_click)
         self.customContextMenuRequested.connect(self.on_context_menu)
-        self._state.favorite_selected.connect(self.on_favorite_selected)
+        self._state.request_root_change.connect(self.on_root_change_requested)
 
-    def on_favorite_selected(self, path: str) -> None:
+    def on_root_change_requested(self, path: str) -> None:
         rootIndex = self._model.setRootPath(path)
         self.setRootIndex(rootIndex)
+        self._state.tree_root_changed.emit(path)
 
     def on_double_click(self, index: qtc.QModelIndex) -> None:
         if index.isValid():
