@@ -61,11 +61,16 @@ class FileTree(qtw.QTreeView):
 
     def on_double_click(self, index: qtc.QModelIndex) -> None:
         if index.isValid():
-            root = self._model.filePath(index)
-            if Path(root).is_dir():
-                rootIndex = self._model.setRootPath(root)
+            str_path = self._model.filePath(index)
+            path = Path(str_path)
+            if path.is_dir():
+                rootIndex = self._model.setRootPath(str_path)
                 self.setRootIndex(rootIndex)
-                self._state.tree_root_changed.emit(root)
+                self._state.tree_root_changed.emit(str_path)
+            elif is_fcstd_file(str_path) or get_import_module(str_path):
+                self._state.open_file(str_path)
+            else:
+                self._state.open_with_sys_app(str_path)
 
     def on_activated(self, index: qtc.QModelIndex) -> None:
         if index.isValid():
