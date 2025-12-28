@@ -37,7 +37,9 @@ class State(qtc.QObject):
         self._current_path = config.get("default_path", str(Path.home()))
         self._history = History()
         self._navigating = False
-        self.passive_tree_root_changed.connect(self.on_passive_tree_root_changed)
+        self.passive_tree_root_changed.connect(
+            self.on_passive_tree_root_changed
+        )
 
     def get_last_path(self) -> str:
         return self._current_path or str(Path.home())
@@ -55,14 +57,18 @@ class State(qtc.QObject):
         try:
             import_file(path)
         except Exception:
-            msg = tr("FileExplorerExt", "File {} could not be imported").format(path)
+            msg = tr("FileExplorerExt", "File {} could not be imported").format(
+                path
+            )
             App.Console.PrintUserWarning(f"{msg}\n")
 
     def open_file(self, path: str) -> None:
         try:
             open_file(path)
         except Exception:
-            msg = tr("FileExplorerExt", "File {} could not be opened").format(path)
+            msg = tr("FileExplorerExt", "File {} could not be opened").format(
+                path
+            )
             App.Console.PrintUserWarning(f"{msg}\n")
 
     def duplicate_file(self, path: str) -> None:
@@ -105,3 +111,18 @@ class State(qtc.QObject):
         s_data = self._get_config()
         s_data["favorites"] = dict(data)
         self._save_config(s_data)
+
+    def get_dock_area(self) -> qtc.Qt.DockWidgetArea:
+        config = self._get_config()
+        area = config.get("dockArea", "LeftDockWidgetArea")
+        return getattr(
+            qtc.Qt.DockWidgetArea,
+            area,
+            qtc.Qt.DockWidgetArea.LeftDockWidgetArea,
+        )
+
+    def save_dock_area(self, area: qtc.Qt.DockWidgetArea) -> None:
+        s_data = self._get_config()
+        s_data["dockArea"] = area.name if area else "LeftDockWidgetArea"
+        self._save_config(s_data)
+

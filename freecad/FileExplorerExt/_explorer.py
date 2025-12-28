@@ -15,7 +15,7 @@ import FreeCADGui as Gui
 from ._favorites import FavoritesWidget
 from ._intl import tr
 from ._preview import PreviewPanel
-from ._qt import qtc, qtw
+from ._qt import qtc, qtw, qtg
 from ._state import State
 from ._tree import FileTree
 from ._style import Icons
@@ -86,7 +86,9 @@ class FileExplorerWidget(qtw.QWidget):
         status = qtw.QStatusBar(self)
         read_only_toggle = qtw.QToolButton()
         read_only_toggle.setCheckable(True)
-        read_only_toggle.setToolButtonStyle(qtc.Qt.ToolButtonStyle.ToolButtonTextOnly)
+        read_only_toggle.setToolButtonStyle(
+            qtc.Qt.ToolButtonStyle.ToolButtonTextOnly
+        )
         read_only_toggle.setToolTip(tr("FileExplorerExt", "Read only"))
         read_only_toggle.toggled.connect(self.on_toggle_readonly)
         read_only_toggle.setFocusPolicy(qtc.Qt.FocusPolicy.NoFocus)
@@ -97,9 +99,13 @@ class FileExplorerWidget(qtw.QWidget):
 
     def on_toggle_readonly(self, ro: bool) -> None:
         toggle = self.read_only_toggle
-        toggle.setText(tr("FileExplorerExt", "ro") if ro else tr("FileExplorerExt", "rw"))
+        toggle.setText(
+            tr("FileExplorerExt", "ro") if ro else tr("FileExplorerExt", "rw")
+        )
         toggle.setToolTip(
-            tr("FileExplorerExt", "Read only") if ro else tr("FileExplorerExt", "Read/Write")
+            tr("FileExplorerExt", "Read only")
+            if ro
+            else tr("FileExplorerExt", "Read/Write")
         )
         self.tree.setReadOnly(ro)
 
@@ -140,9 +146,43 @@ class FileExplorerDockWidget(qtw.QDockWidget):
         self.setWidget(self.file_explorer)
         self.setObjectName("FileExplorerExt_Dock")
 
+    def closeEvent(self, event: qtg.QCloseEvent) -> None:
+        Gui.__FileExplorerExt__ = None
+        return super().closeEvent(event)
+
+    def on_area_changed(self, area: qtc.Qt.DockWidgetArea) -> None:
+        self.file_explorer._state.save_dock_area(area)
+
+    def start(self) -> None:
+        window = self.parent()
+        Gui.__FileExplorerExt__ = self
+        area = self.file_explorer._state.get_dock_area()
+        window.addDockWidget(area, self)
+        self.setVisible(True)
+        qtc.QTimer.singleShot(
+            100, lambda: self.dockLocationChanged.connect(self.on_area_changed)
+        )
+
+
+def _instance() -> FileExplorerDockWidget | None:
+    return getattr(Gui, "__FileExplorerExt__", None)
+
 
 def show() -> None:
-    window = Gui.getMainWindow()
-    dock = FileExplorerDockWidget(window)
-    window.__FileExplorerExt__ = dock
-    window.addDockWidget(qtc.Qt.LeftDockWidgetArea, dock)
+    if instance := _instance():
+        instance.setVisible(True)
+    else:
+        instance = FileExplorerDockWidget(Gui.getMainWindow())
+        instance.start()
+
+
+def hide() -> None:
+    if instance := _instance():
+        instance.setVisible(False)
+
+
+def toggle() -> None:
+    if (instance := _instance()) and instance.isVisible():
+        hide()
+    else:
+        show()

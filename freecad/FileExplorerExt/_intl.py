@@ -9,3 +9,8 @@ FileExplorerExt: Translation.
 import FreeCAD as App
 
 tr = App.Qt.translate
+
+def install_translations() -> None:
+    import FreeCADGui as Gui
+    from pathlib import Path
+    Gui.addLanguagePath(str(Path(__file__).parent / "resources" / "translations"))

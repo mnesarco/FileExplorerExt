@@ -8,7 +8,16 @@ if not IS_QT6_SUPPORTED:
     import FreeCAD as App
 
     App.Console.PrintWarning("FileExplorer requires Qt6")
-else:
-    from . import _explorer
 
-    _explorer.show()
+else:
+    from ._intl import install_translations
+
+    install_translations()
+
+    from ._explorer import show
+    from ._commands import FEE_ToggleExplorer
+
+    cmd = FEE_ToggleExplorer()
+    cmd.Install()
+    show()
+
