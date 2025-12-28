@@ -36,6 +36,7 @@ class FileTree(qtw.QTreeView):
 
         model.rootPathChanged.connect(state.passive_tree_root_changed)
         model.setFilter(Filter.AllDirs | Filter.NoDotAndDotDot | Filter.Files)
+        model.setOptions(qtw.QFileSystemModel.Option.DontUseCustomDirectoryIcons)
         model.setRootPath(state.get_last_path())
         model.setNameFilterDisables(False)
 
@@ -48,6 +49,7 @@ class FileTree(qtw.QTreeView):
         self.setColumnWidth(0, 300)
         self.setUniformRowHeights(True)
         self.setContextMenuPolicy(qtc.Qt.ContextMenuPolicy.CustomContextMenu)
+        self.setSortingEnabled(True)
         self.activated.connect(self.on_activated)
         self.clicked.connect(self.on_activated)
         self.doubleClicked.connect(self.on_double_click)
