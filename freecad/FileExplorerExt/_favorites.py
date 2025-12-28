@@ -255,6 +255,12 @@ class FavoritesWidget(qtw.QListView):
             lambda: self.remove_favorite(index),
         )
 
+        menu.addAction(
+            Icons.DefaultDir,
+            tr("FileExplorerExt", "Set as default dir"),
+            lambda: self._state.set_default_dir(fav.path),
+        )
+
         menu.exec(self.mapToGlobal(position))
 
     def remove_favorite(self, index: qtc.QModelIndex) -> None:

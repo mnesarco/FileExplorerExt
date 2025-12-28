@@ -125,6 +125,11 @@ class FileTree(qtw.QTreeView):
                 tr("FileExplorerExt", "Browse"),
                 lambda: self._state.open_with_sys_app(file_path),
             )
+            menu.addAction(
+                Icons.DefaultDir,
+                tr("FileExplorerExt", "Set as default dir"),
+                lambda: self._state.set_default_dir(file_path),
+            )
         else:
             menu.addAction(
                 Icons.Copy,

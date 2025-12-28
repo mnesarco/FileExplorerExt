@@ -17,6 +17,7 @@ class Icons:
     RootDir = standardIcon(pixmaps.SP_ComputerIcon)
     HomeDir = fromTheme("user-home", standardIcon(pixmaps.SP_DirHomeIcon))
     FavoriteDir = fromTheme("folder", standardIcon(pixmaps.SP_DirIcon))
+    DefaultDir = standardIcon(pixmaps.SP_DirLinkIcon)
 
     SysOpen = fromTheme("document-open", standardIcon(pixmaps.SP_DirOpenIcon))
     Import = standardIcon(pixmaps.SP_ArrowForward)
