@@ -8,8 +8,8 @@ FileExplorerExt: Commands.
 
 from pathlib import Path
 
-import FreeCAD as App
-import FreeCADGui as Gui
+import FreeCAD as App  # type: ignore
+import FreeCADGui as Gui  # type: ignore
 
 from ._explorer import toggle
 from ._intl import tr

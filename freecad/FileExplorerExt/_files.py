@@ -11,20 +11,23 @@ import shutil
 import types
 from pathlib import Path
 
-import FreeCAD as App
-import FreeCADGui as Gui
+import FreeCAD as App  # type: ignore
+import FreeCADGui as Gui  # type: ignore
 
 from ._qt import qtg
 
-SUPPORTED_IMAGE_FORMATS = set(
-    [f".{str(f, 'utf-8')}".lower() for f in qtg.QImageReader.supportedImageFormats()]
-)
+SUPPORTED_IMAGE_FORMATS = set([
+    f".{str(f, 'utf-8')}".lower()
+    for f in qtg.QImageReader.supportedImageFormats()
+])
 
 
 def is_image_file(file_path: str) -> bool:
     """Return True if Qt can read the image format."""
     path = Path(file_path)
-    return ((path.suffix or "").lower() in SUPPORTED_IMAGE_FORMATS) and path.exists()
+    return (
+        (path.suffix or "").lower() in SUPPORTED_IMAGE_FORMATS
+    ) and path.exists()
 
 
 def is_fcstd_file(file_path: str) -> bool:
@@ -49,7 +52,7 @@ def open_file(file_path: str) -> None:
         module = get_import_module(file_path)
         if module:
             try:
-                from freecad import module_io
+                from freecad import module_io  # type: ignore
             except ImportError:
                 Gui.insert(file_path)
             else:
@@ -68,7 +71,7 @@ def import_file(file_path: str) -> None:
     module = get_import_module(file_path)
     if module:
         try:
-            from freecad import module_io
+            from freecad import module_io  # type: ignore
         except ImportError:
             Gui.insert(file_path, doc_name)
         else:

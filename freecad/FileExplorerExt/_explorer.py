@@ -9,16 +9,17 @@ FileExplorerExt: Main Widget.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
-import FreeCADGui as Gui
+import FreeCADGui as Gui  # type: ignore
 
 from ._favorites import FavoritesWidget
 from ._intl import tr
 from ._preview import PreviewPanel
-from ._qt import qtc, qtw, qtg
+from ._qt import qtc, qtg, qtw
 from ._state import State
-from ._tree import FileTree
 from ._style import Icons
+from ._tree import FileTree
 
 
 class FileExplorerWidget(qtw.QWidget):
@@ -117,7 +118,7 @@ class FileExplorerWidget(qtw.QWidget):
         top_toolbar = self.build_top_toolbar()
         self.status = self.build_statusbar()
 
-        splitter = qtw.QSplitter(qtc.Qt.Horizontal)
+        splitter = qtw.QSplitter(qtc.Qt.Orientation.Horizontal)
         splitter.addWidget(left_sidebar)
         splitter.addWidget(self.tree)
         splitter.setStretchFactor(0, 2)
@@ -147,18 +148,19 @@ class FileExplorerDockWidget(qtw.QDockWidget):
         self.setObjectName("FileExplorerExt_Dock")
 
     def closeEvent(self, event: qtg.QCloseEvent) -> None:
-        Gui.__FileExplorerExt__ = None
+        setattr(Gui, "__FileExplorerExt__", None)
         return super().closeEvent(event)
 
     def on_area_changed(self, area: qtc.Qt.DockWidgetArea) -> None:
         self.file_explorer._state.save_dock_area(area)
 
     def start(self) -> None:
-        window = self.parent()
-        Gui.__FileExplorerExt__ = self
+        window = cast(qtw.QMainWindow, self.parent())
+        setattr(Gui, "__FileExplorerExt__", self)
         area = self.file_explorer._state.get_dock_area()
         window.addDockWidget(area, self)
         self.setVisible(True)
+        self.raise_()
         qtc.QTimer.singleShot(
             100, lambda: self.dockLocationChanged.connect(self.on_area_changed)
         )
@@ -171,6 +173,7 @@ def _instance() -> FileExplorerDockWidget | None:
 def show() -> None:
     if instance := _instance():
         instance.setVisible(True)
+        instance.raise_()
     else:
         instance = FileExplorerDockWidget(Gui.getMainWindow())
         instance.start()

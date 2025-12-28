@@ -8,7 +8,7 @@ FileExplorerExt: File Tree.
 
 from pathlib import Path
 
-import FreeCAD as App
+import FreeCAD as App  # type: ignore
 
 from ._files import get_import_module, is_fcstd_file
 from ._intl import tr
@@ -25,7 +25,7 @@ class FileTree(qtw.QTreeView):
     File Tree Widget.
     """
 
-    def __init__(self, state: State, parent: qtc.QObject | None = None) -> None:
+    def __init__(self, state: State, parent: qtw.QWidget | None = None) -> None:
         super().__init__(parent)
         self.setObjectName("FileExplorerExt_Tree")
 
@@ -137,7 +137,7 @@ class FileTree(qtw.QTreeView):
                 lambda: self._state.duplicate_file(file_path),
             )
 
-        menu.exec(self.mapToGlobal(position))
+        menu.exec(self.mapToGlobal(position))  # type: ignore -> False positive
 
     def copy_path_to_clipboard(self, path: str) -> None:
         clipboard = qtg.QGuiApplication.clipboard()

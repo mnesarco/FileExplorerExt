@@ -9,6 +9,8 @@ FileExplorerExt: Favorites.
 from dataclasses import dataclass
 from pathlib import Path
 
+import FreeCAD as App  # type: ignore
+
 from ._intl import tr
 from ._qt import qtc, qtg, qtw
 from ._state import State
@@ -16,13 +18,11 @@ from ._style import Icons
 
 Role = qtc.Qt.ItemDataRole
 
-import FreeCAD as App
-
 
 @dataclass
 class Favorite:
     path: str
-    name: str | None = None
+    name: str = ""
     kind: str = "user"
     order: int = 2
 
@@ -76,14 +76,14 @@ class FavoritesModel(qtc.QAbstractListModel):
             "user": Icons.FavoriteDir,
         }
 
-    def rowCount(self, parent: qtc.QModelIndex = qtc.QModelIndex()) -> int:
+    def rowCount(self, parent: qtc.QModelIndex | qtc.QPersistentModelIndex = qtc.QModelIndex()) -> int:
         if parent.isValid():
             return 0
         return len(self._items)
 
     def data(
         self,
-        index: qtc.QModelIndex,
+        index: qtc.QModelIndex | qtc.QPersistentModelIndex,
         role: int = Role.DisplayRole,
     ) -> object:
         if not index.isValid() or index.row() >= len(self._items):
@@ -146,7 +146,7 @@ class FavoritesModel(qtc.QAbstractListModel):
                 return self.index(row, 0)
         return None
 
-    def get_state(self) -> list[tuple[str, str]]:
+    def get_state(self) -> list[tuple[str, str | None]]:
         return [(f.path, f.name) for f in self._items if f.kind == "user"]
 
 
@@ -165,13 +165,17 @@ class FavoritesWidget(qtw.QListView):
     ) -> None:
         super().__init__(parent)
         self.setObjectName("FileExplorerExt_Favorites")
-        user_data = [Favorite(path, name) for path, name in state.get_favorites()]
+        user_data = [
+            Favorite(path, name) for path, name in state.get_favorites()
+        ]
         self._model = FavoritesModel(user_data, self)
         self._state = state
         self.setModel(self._model)
         self.setAcceptDrops(True)
         self.setDragEnabled(True)
-        self.setSelectionMode(qtw.QAbstractItemView.SelectionMode.SingleSelection)
+        self.setSelectionMode(
+            qtw.QAbstractItemView.SelectionMode.SingleSelection
+        )
         self.setContextMenuPolicy(qtc.Qt.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self.on_context_menu)
         self.setIconSize(qtc.QSize(16, 16))
@@ -194,7 +198,8 @@ class FavoritesWidget(qtw.QListView):
     def on_activated(self, index: qtc.QModelIndex) -> None:
         if index.isValid():
             path = self._model.getItem(index.row())
-            self._state.request_root_change.emit(path.path)
+            if path:
+                self._state.request_root_change.emit(path.path)
 
     def dragEnterEvent(self, event: qtg.QDragEnterEvent) -> None:
         if event.mimeData().hasUrls() or event.mimeData().hasText():
@@ -240,7 +245,7 @@ class FavoritesWidget(qtw.QListView):
             return
 
         fav = self._model.getItem(index.row())
-        if fav.kind != "user":
+        if not fav or fav.kind != "user":
             return
 
         menu = qtw.QMenu(self)
@@ -261,13 +266,13 @@ class FavoritesWidget(qtw.QListView):
             lambda: self._state.set_default_dir(fav.path),
         )
 
-        menu.exec(self.mapToGlobal(position))
+        menu.exec(self.mapToGlobal(position))  # type: ignore -> False positive
 
     def remove_favorite(self, index: qtc.QModelIndex) -> None:
         if not index.isValid():
             return
         fav = self._model.getItem(index.row())
-        if fav.kind == "user":
+        if fav and fav.kind == "user":
             self._model.removeItem(index.row())
             self._state.save_favorites(self._model.get_state())
 
@@ -277,6 +282,8 @@ class FavoritesWidget(qtw.QListView):
 
         row = index.row()
         fav = self._model.getItem(row)
+        if not fav:
+            return
 
         new_name, ok = qtw.QInputDialog.getText(
             self,
@@ -286,7 +293,12 @@ class FavoritesWidget(qtw.QListView):
             fav.name,
         )
 
-        if ok and new_name and new_name != fav.name and not self._model.contains_name(new_name):
+        if (
+            ok
+            and new_name
+            and new_name != fav.name
+            and not self._model.contains_name(new_name)
+        ):
             fav.name = new_name
             self._state.save_favorites(self._model.get_state())
             self._model.dataChanged.emit(index, index)

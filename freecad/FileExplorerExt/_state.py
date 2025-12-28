@@ -6,15 +6,18 @@
 FileExplorerExt: Persistent state.
 """
 
+from __future__ import annotations
+
 import json
 from pathlib import Path
+from typing import cast
 
-import FreeCAD as App
+import FreeCAD as App  # type: ignore
 
 from ._files import duplicate_file, import_file, open_file
 from ._history import History
-from ._qt import qtc, qtg
 from ._intl import tr
+from ._qt import qtc, qtg
 
 
 class State(qtc.QObject):
@@ -34,7 +37,7 @@ class State(qtc.QObject):
     def __init__(self, parent: qtc.QObject | None = None):
         super().__init__(parent)
         config = self._get_config()
-        self._current_path = config.get("default_path", str(Path.home()))
+        self._current_path = str(config.get("default_path", Path.home()))
         self._history = History()
         self._navigating = False
         self.passive_tree_root_changed.connect(
@@ -104,17 +107,17 @@ class State(qtc.QObject):
 
     def get_favorites(self) -> list[tuple[str, str]]:
         data = self._get_config()
-        favorites = data.get("favorites", {})
+        favorites = cast(dict[str, str], data.get("favorites", {}))
         return list(favorites.items())
 
-    def save_favorites(self, data: list[tuple[str, str]]) -> None:
+    def save_favorites(self, data: list[tuple[str, str | None]]) -> None:
         s_data = self._get_config()
         s_data["favorites"] = dict(data)
         self._save_config(s_data)
 
     def get_dock_area(self) -> qtc.Qt.DockWidgetArea:
         config = self._get_config()
-        area = config.get("dockArea", "LeftDockWidgetArea")
+        area = str(config.get("dockArea", "LeftDockWidgetArea"))
         return getattr(
             qtc.Qt.DockWidgetArea,
             area,
@@ -125,4 +128,3 @@ class State(qtc.QObject):
         s_data = self._get_config()
         s_data["dockArea"] = area.name if area else "LeftDockWidgetArea"
         self._save_config(s_data)
-

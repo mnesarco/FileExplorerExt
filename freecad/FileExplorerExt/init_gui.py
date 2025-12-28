@@ -5,7 +5,7 @@
 from ._qt import IS_QT6_SUPPORTED
 
 if not IS_QT6_SUPPORTED:
-    import FreeCAD as App
+    import FreeCAD as App  # type: ignore
 
     App.Console.PrintWarning("FileExplorer requires Qt6")
 
