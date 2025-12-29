@@ -332,6 +332,7 @@ class FavoritesWidget(qtw.QListView):
         )
 
         menu.addAction(
+            Icons.Trash,
             tr("FileExplorerExt", "Remove from Favorites"),
             lambda: self.remove_favorite(index),
         )

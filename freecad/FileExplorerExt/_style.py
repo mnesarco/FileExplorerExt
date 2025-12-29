@@ -29,3 +29,5 @@ class Icons:
     NavUp = fromTheme("go-up", standardIcon(pixmaps.SP_ArrowUp))
     NavBack = fromTheme("go-previous", standardIcon(pixmaps.SP_ArrowBack))
     NavForward = fromTheme("go-next", standardIcon(pixmaps.SP_ArrowForward))
+
+    Trash = standardIcon(pixmaps.SP_TrashIcon)
