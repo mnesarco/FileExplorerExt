@@ -352,7 +352,7 @@ class FavoritesWidget(qtw.QListView):
 
         QtCompat.addAction(
             menu,
-            None,
+            Icons.Rename,
             tr("FileExplorerExt", "Rename"),
             lambda: self.rename_favorite(index),
         )

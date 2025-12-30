@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 64.000001 63.999999"
+   version="1.1"
+   sodipodi:docname="home.svg"
+   width="64"
+   height="64"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="4.9820719"
+     inkscape:cx="54.495399"
+     inkscape:cy="61.11915"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#162d50;stop-opacity:1"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#87aade;stop-opacity:1"
+         offset="0.32034948"
+         id="stop3" />
+      <stop
+         style="stop-color:#162d50;stop-opacity:1"
+         offset="1"
+         id="stop2" />
+    </linearGradient>
+    <style
+       id="style1">.cls-1{fill-rule:evenodd;}</style>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="-12.043182"
+       y1="31.914433"
+       x2="80.689323"
+       y2="32.115154"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <title
+     id="title1">homepage</title>
+  <path
+     class="cls-1"
+     d="M 9.7343749,40.525408 30.822916,19.42645 c 1.114584,-1.114584 1.255209,-1.161459 2.411459,0 l 21.03125,21.098958 v 21.161458 h -15.625 V 47.389991 A 1.7604167,1.7604167 0 0 0 36.885416,45.634783 H 27.125 a 1.7604167,1.7604167 0 0 0 -1.755208,1.755208 V 61.686866 H 9.7447916 V 40.525408 Z M 31.338541,2.7702002 0,32.197283 7.7291666,36.254575 29.864583,13.931658 c 1.895833,-1.90625 1.916667,-1.947916 3.796875,-0.08333 L 56.270833,36.244158 64,32.186866 32.614583,2.7233252 c -0.5625,-0.5208334 -0.645833,-0.5885417 -1.276042,0.046875 z"
+     id="path1"
+     style="stroke-width:1;fill-opacity:1;fill:url(#linearGradient2)" />
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>homepage</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>

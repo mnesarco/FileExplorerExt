@@ -7,27 +7,28 @@ FileExplorerExt: Application style.
 """
 
 from ._qt import qtg, qtw
-
+from pathlib import Path
 
 class Icons:
     standardIcon = qtw.QApplication.style().standardIcon
     fromTheme = qtg.QIcon.fromTheme
     pixmaps = qtw.QStyle.StandardPixmap
 
-    RootDir = standardIcon(pixmaps.SP_ComputerIcon)
-    HomeDir = fromTheme("user-home", standardIcon(pixmaps.SP_DirHomeIcon))
-    FavoriteDir = fromTheme("folder", standardIcon(pixmaps.SP_DirIcon))
-    DefaultDir = standardIcon(pixmaps.SP_DirLinkIcon)
+    @staticmethod
+    def customIcon(name: str) -> qtg.QIcon:
+        return qtg.QIcon(str(Path(__file__).parent / "resources" / "icons" / f"{name}.svg"))
 
-    SysOpen = fromTheme("document-open", standardIcon(pixmaps.SP_DirOpenIcon))
-    Import = standardIcon(pixmaps.SP_ArrowForward)
-
-    Copy = fromTheme("edit-copy", standardIcon(pixmaps.SP_CommandLink))
-
-    Macros = standardIcon(pixmaps.SP_FileIcon)
-
-    NavUp = fromTheme("go-up", standardIcon(pixmaps.SP_ArrowUp))
-    NavBack = fromTheme("go-previous", standardIcon(pixmaps.SP_ArrowBack))
-    NavForward = fromTheme("go-next", standardIcon(pixmaps.SP_ArrowForward))
-
-    Trash = standardIcon(pixmaps.SP_TrashIcon)
+    RootDir = customIcon("root")
+    HomeDir = customIcon("home")
+    FavoriteDir = customIcon("fav")
+    DefaultDir = customIcon("default")
+    SysOpen = customIcon("open")
+    Import = customIcon("import")
+    Copy = customIcon("copy")
+    Duplicate = customIcon("duplicate")
+    Macros = customIcon("macros")
+    NavUp = customIcon("up")
+    NavBack = customIcon("back")
+    NavForward = customIcon("forward")
+    Trash = customIcon("trash")
+    Rename = customIcon("rename")

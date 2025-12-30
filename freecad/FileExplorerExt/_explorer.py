@@ -88,6 +88,7 @@ class FileExplorerWidget(qtw.QWidget):
 
     def build_statusbar(self) -> qtw.QStatusBar:
         status = qtw.QStatusBar(self)
+        status.setSizeGripEnabled(False)
         read_only_toggle = qtw.QToolButton()
         read_only_toggle.setCheckable(True)
         read_only_toggle.setToolButtonStyle(

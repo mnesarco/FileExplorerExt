@@ -143,7 +143,7 @@ class FileTree(qtw.QTreeView):
         else:
             QtCompat.addAction(
                 menu,
-                Icons.Copy,
+                Icons.Duplicate,
                 tr("FileExplorerExt", "Duplicate"),
                 lambda: self._state.duplicate_file(file_path),
             )

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: CorelDRAW 2021 (64-Bit) -->
+
+<svg
+   xml:space="preserve"
+   width="64"
+   height="64"
+   version="1.1"
+   shape-rendering="geometricPrecision"
+   text-rendering="geometricPrecision"
+   image-rendering="optimizeQuality"
+   fill-rule="evenodd"
+   clip-rule="evenodd"
+   viewBox="0 0 64 64.051643"
+   id="svg1"
+   sodipodi:docname="open.svg"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs1"><linearGradient
+     id="linearGradient2"
+     inkscape:collect="always"><stop
+       style="stop-color:#162d50;stop-opacity:1"
+       offset="0"
+       id="stop2" /><stop
+       style="stop-color:#87aade;stop-opacity:1"
+       offset="0.63091516"
+       id="stop4" /><stop
+       style="stop-color:#162d50;stop-opacity:1"
+       offset="1"
+       id="stop3" /></linearGradient><linearGradient
+     inkscape:collect="always"
+     xlink:href="#linearGradient2"
+     id="linearGradient3"
+     x1="32.848568"
+     y1="-52.293213"
+     x2="27.114664"
+     y2="80.351128"
+     gradientUnits="userSpaceOnUse" /></defs><sodipodi:namedview
+   id="namedview1"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   inkscape:zoom="3.2726614"
+   inkscape:cx="-14.819743"
+   inkscape:cy="40.181365"
+   inkscape:window-width="1920"
+   inkscape:window-height="1016"
+   inkscape:window-x="1920"
+   inkscape:window-y="0"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Layer_x0020_1" />
+ <g
+   id="Layer_x0020_1"
+   inkscape:label="Layer 1"
+   inkscape:groupmode="layer">
+  <metadata
+   id="CorelCorpID_0Corel-Layer" />
+  <path
+   style="vector-effect:non-scaling-stroke;fill:url(#linearGradient3);stroke-width:1.00081;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:hairline;paint-order:markers fill stroke;fill-opacity:1"
+   d="m 4.0101972,6.2885579 13.5175298,-0.08109 c 1.695708,-0.042795 2.504505,1.2681151 2.833535,3.3113029 l 2.006416,4.3855389 3.675991,1.385649 20.365695,0.19081 c 0.846225,0.342598 1.996605,-0.282568 2.10891,2.39523 l -0.05406,7.590097 12.586211,0.10812 c 0.536951,0.273975 1.309848,0.208779 0.748798,2.061131 l -8.958511,27.590021 c -0.442999,1.302155 -1.617585,2.702079 -3.441214,2.694407 L 3.5875852,58.136014 C 2.3959187,58.528827 2.1092674,57.64397 2.1361288,56.316508 L 1.7919568,50.313243 1.6297776,8.6371042 C 1.170866,6.77306 2.5229568,5.773972 4.0101972,6.2885579 Z"
+   id="path2"
+   sodipodi:nodetypes="ccccccccccccccccc" /><path
+   fill="#000000"
+   fill-rule="nonzero"
+   d="m 15.155162,22.906328 h 32.606276 v -5.138449 c 0.09132,-1.273941 -0.584221,-1.590784 -1.406133,-1.638393 -0.47163,-0.02955 -0.997054,-0.03283 -1.471185,-0.0016 H 26.097729 c -4.507381,0 -5.400601,-3.125753 -6.250035,-6.095547 C 19.363553,8.3380879 18.901932,6.7210363 17.014159,6.7210363 H 3.9561374 c -0.8456816,0 -1.5424931,0.9144139 -1.5424931,2.0241875 V 50.286214 L 10.099838,27.310946 c 0.813155,-2.432964 3.018683,-4.404618 5.055324,-4.404618 z m 35.045742,0 H 60.96583 c 2.390675,0 3.717996,2.672649 2.730951,5.629309 l 0.0038,0.0016 -9.228688,27.590019 c -0.813155,2.434608 -3.019933,4.40462 -5.055323,4.40462 H 3.6058551 c -0.9570212,0 -1.7313953,-0.420269 -2.2618228,-1.10649 -0.77562501,-0.851988 -1.36985388,-2.81215 -1.36985388,-4.112358 V 8.7452238 c 0,-2.8762178 1.79019268,-5.2254573 3.98195898,-5.2254573 H 17.014159 c 3.567876,0 4.322235,2.6365329 5.11162,5.399475 0.557951,1.9519535 1.144673,4.0056915 3.97195,4.0056915 6.405163,0 12.820332,0.05418 19.224244,0.0033 0.381557,-0.0049 0.773123,-0.0099 1.138418,0.01149 2.052903,0.124767 3.855606,0.886506 3.738011,4.828171 z m 10.754917,3.127395 H 15.145154 c -1.083373,0 -2.376916,1.218123 -2.807262,2.503557 L 3.1092049,56.1273 3.1054549,56.1257 c -0.2564567,0.768304 -0.1826472,1.280507 0.5091603,1.280507 H 49.42653 c 1.083373,0 2.375665,-1.219766 2.806011,-2.505198 l 9.228688,-27.590021 c 0.0087,0.0049 0.511661,-1.277223 -0.505408,-1.277223 z"
+   id="path1"
+   style="stroke-width:1" />
+ </g>
+</svg>

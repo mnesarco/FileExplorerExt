@@ -68,7 +68,7 @@ if not IS_QT6_SUPPORTED:
 
         @staticmethod
         def addAction(widget: qtw.QWidget, icon: qtg.QIcon | None = None, text: str | None = None, call: Callable | None = None) -> qtg.QAction:
-            action = qtg.QAction()
+            action = qtg.QAction(widget)
             if text:
                 action.setText(text)
             if icon:
