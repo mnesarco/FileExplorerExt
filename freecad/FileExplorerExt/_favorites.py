@@ -6,6 +6,8 @@
 FileExplorerExt: Favorites.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
 from collections.abc import Sequence
@@ -13,7 +15,7 @@ from collections.abc import Sequence
 import FreeCAD as App  # type: ignore
 
 from ._intl import tr
-from ._qt import qtc, qtg, qtw
+from ._qt import qtc, qtg, qtw, QtCompat
 from ._state import State
 from ._style import Icons
 
@@ -106,20 +108,30 @@ class FavoritesModel(qtc.QAbstractListModel):
             case _:
                 return None
 
-    def flags(self, index: qtc.QModelIndex | qtc.QPersistentModelIndex) -> qtc.Qt.ItemFlag:
+    def flags(
+        self, index: qtc.QModelIndex | qtc.QPersistentModelIndex
+    ) -> QtCompat.ItemFlag:
         default_flags = super().flags(index)
         if index.isValid():
             item = self._items[index.row()]
             # Only user favorites can be dragged and dropped
             if item.kind == "user":
-                return default_flags | qtc.Qt.ItemFlag.ItemIsDragEnabled | qtc.Qt.ItemFlag.ItemIsDropEnabled
-        return default_flags | qtc.Qt.ItemFlag.ItemIsDropEnabled
+                return (
+                    default_flags
+                    | QtCompat.ItemFlag.ItemIsDragEnabled
+                    | QtCompat.ItemFlag.ItemIsDropEnabled
+                )
+        return default_flags | QtCompat.ItemFlag.ItemIsDropEnabled
 
-    def supportedDropActions(self) -> qtc.Qt.DropAction:
-        return qtc.Qt.DropAction.MoveAction
+    def supportedDropActions(self) -> QtCompat.DropAction:
+        return QtCompat.DropAction.MoveAction
 
     def mimeTypes(self) -> list[str]:
-        return ["application/x-qabstractitemmodeldatalist", "text/uri-list", "text/plain"]
+        return [
+            "application/x-qabstractitemmodeldatalist",
+            "text/uri-list",
+            "text/plain",
+        ]
 
     def mimeData(self, indexes: Sequence[qtc.QModelIndex]) -> qtc.QMimeData:
         mime_data = super().mimeData(indexes)
@@ -175,7 +187,9 @@ class FavoritesModel(qtc.QAbstractListModel):
 
     def moveItem(self, from_row: int, to_row: int) -> bool:
         """Move an item from one position to another. Only user favorites can be moved."""
-        if not (0 <= from_row < len(self._items) and 0 <= to_row < len(self._items)):
+        if not (
+            0 <= from_row < len(self._items) and 0 <= to_row < len(self._items)
+        ):
             return False
 
         # Don't allow moving system favorites (root, home, macro)
@@ -190,8 +204,13 @@ class FavoritesModel(qtc.QAbstractListModel):
         if from_row == to_row:
             return False
 
-        self.beginMoveRows(qtc.QModelIndex(), from_row, from_row, qtc.QModelIndex(),
-                          to_row + 1 if to_row > from_row else to_row)
+        self.beginMoveRows(
+            qtc.QModelIndex(),
+            from_row,
+            from_row,
+            qtc.QModelIndex(),
+            to_row + 1 if to_row > from_row else to_row,
+        )
         item = self._items.pop(from_row)
         self._items.insert(to_row, item)
         self.endMoveRows()
@@ -224,12 +243,10 @@ class FavoritesWidget(qtw.QListView):
         self.setModel(self._model)
         self.setAcceptDrops(True)
         self.setDragEnabled(True)
-        self.setDragDropMode(qtw.QAbstractItemView.DragDropMode.DragDrop)
-        self.setDefaultDropAction(qtc.Qt.DropAction.MoveAction)
-        self.setSelectionMode(
-            qtw.QAbstractItemView.SelectionMode.SingleSelection
-        )
-        self.setContextMenuPolicy(qtc.Qt.ContextMenuPolicy.CustomContextMenu)
+        self.setDragDropMode(QtCompat.DragDropMode.DragDrop)
+        self.setDefaultDropAction(QtCompat.DropAction.MoveAction)
+        self.setSelectionMode(QtCompat.SelectionMode.SingleSelection)
+        self.setContextMenuPolicy(QtCompat.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self.on_context_menu)
         self.setIconSize(qtc.QSize(16, 16))
         self.setSpacing(2)
@@ -244,14 +261,14 @@ class FavoritesWidget(qtw.QListView):
         #     tr("FileExplorerExt", "Rename favorite"),
         #     lambda: self.rename_favorite(self.currentIndex()),
         # )
-        # rename_action.setPriority(qtg.QAction.Priority.LowPriority)
-        # rename_action.setShortcutContext(qtc.Qt.ShortcutContext.WidgetShortcut)
+        # rename_action.setPriority(QtCompat.Priority.LowPriority)
+        # rename_action.setShortcutContext(QtCompat.ShortcutContext.WidgetShortcut)
 
     def on_tree_root_changed(self, path: str) -> None:
         index = self._model.findIndex(path)
         if index and index.isValid():
             self.selectionModel().select(
-                index, qtc.QItemSelectionModel.SelectionFlag.ClearAndSelect
+                index, QtCompat.SelectionFlag.ClearAndSelect
             )
         else:
             self.selectionModel().clear()
@@ -274,14 +291,21 @@ class FavoritesWidget(qtw.QListView):
         mime_data = event.mimeData()
 
         # Check if this is an internal move (reordering)
-        if event.source() == self and event.proposedAction() == qtc.Qt.DropAction.MoveAction:
-            drop_index = self.indexAt(event.position().toPoint())
+        if (
+            event.source() == self
+            and event.proposedAction() == QtCompat.DropAction.MoveAction
+        ):
+            drop_index = self.indexAt(QtCompat.get_event_pos(event))
             current_index = self.currentIndex()
 
             if current_index.isValid():
                 from_row = current_index.row()
                 # If dropping between items, use the index; if on an item, insert before it
-                to_row = drop_index.row() if drop_index.isValid() else len(self._model._items) - 1
+                to_row = (
+                    drop_index.row()
+                    if drop_index.isValid()
+                    else len(self._model._items) - 1
+                )
 
                 if self._model.moveItem(from_row, to_row):
                     self._state.save_favorites(self._model.get_state())
@@ -343,7 +367,7 @@ class FavoritesWidget(qtw.QListView):
             lambda: self._state.set_default_dir(fav.path),
         )
 
-        menu.exec(self.mapToGlobal(position))  # type: ignore -> False positive
+        QtCompat.exec_menu(menu, self.mapToGlobal(position))
 
     def remove_favorite(self, index: qtc.QModelIndex) -> None:
         if not index.isValid():
@@ -366,7 +390,7 @@ class FavoritesWidget(qtw.QListView):
             self,
             tr("FileExplorerExt", "Rename Favorite"),
             tr("FileExplorerExt", "Enter new name:"),
-            qtw.QLineEdit.EchoMode.Normal,
+            QtCompat.EchoMode.Normal,
             fav.name,
         )
 

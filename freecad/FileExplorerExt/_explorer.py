@@ -16,7 +16,7 @@ import FreeCADGui as Gui  # type: ignore
 from ._favorites import FavoritesWidget
 from ._intl import tr
 from ._preview import PreviewPanel
-from ._qt import qtc, qtg, qtw
+from ._qt import qtc, qtg, qtw, QtCompat
 from ._state import State
 from ._style import Icons
 from ._tree import FileTree
@@ -88,11 +88,11 @@ class FileExplorerWidget(qtw.QWidget):
         read_only_toggle = qtw.QToolButton()
         read_only_toggle.setCheckable(True)
         read_only_toggle.setToolButtonStyle(
-            qtc.Qt.ToolButtonStyle.ToolButtonTextOnly
+            QtCompat.ToolButtonStyle.ToolButtonTextOnly
         )
         read_only_toggle.setToolTip(tr("FileExplorerExt", "Read only"))
         read_only_toggle.toggled.connect(self.on_toggle_readonly)
-        read_only_toggle.setFocusPolicy(qtc.Qt.FocusPolicy.NoFocus)
+        read_only_toggle.setFocusPolicy(QtCompat.FocusPolicy.NoFocus)
         status.addPermanentWidget(read_only_toggle)
         self.read_only_toggle = read_only_toggle
         read_only_toggle.toggle()
@@ -118,7 +118,7 @@ class FileExplorerWidget(qtw.QWidget):
         top_toolbar = self.build_top_toolbar()
         self.status = self.build_statusbar()
 
-        splitter = qtw.QSplitter(qtc.Qt.Orientation.Horizontal)
+        splitter = qtw.QSplitter(QtCompat.Orientation.Horizontal)
         splitter.addWidget(left_sidebar)
         splitter.addWidget(self.tree)
         splitter.setStretchFactor(0, 2)
@@ -151,7 +151,7 @@ class FileExplorerDockWidget(qtw.QDockWidget):
         setattr(Gui, "__FileExplorerExt__", None)
         return super().closeEvent(event)
 
-    def on_area_changed(self, area: qtc.Qt.DockWidgetArea) -> None:
+    def on_area_changed(self, area: QtCompat.DockWidgetArea) -> None:
         self.file_explorer._state.save_dock_area(area)
 
     def start(self) -> None:

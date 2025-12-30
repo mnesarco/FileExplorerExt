@@ -6,10 +6,12 @@
 FileExplorerExt: Preview Widget
 """
 
+from __future__ import annotations
+
 import zipfile
 
 from ._files import is_fcstd_file, is_image_file
-from ._qt import qtc, qtg, qtw
+from ._qt import qtc, qtg, qtw, QtCompat
 from ._state import State
 
 
@@ -32,7 +34,7 @@ class PreviewPanel(qtw.QLabel):
         self.update_preview(path)
 
     def init_ui(self) -> None:
-        self.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
+        self.setAlignment(QtCompat.AlignmentFlag.AlignCenter)
         self.setVisible(False)
         self.setStyleSheet("QLabel { background-color: white; }")
 
@@ -40,7 +42,7 @@ class PreviewPanel(qtw.QLabel):
         self.setVisible(False)
 
         info = qtc.QFileInfo(file_path)
-        if not info.exists() or info.isDir():
+        if not info.exists() or info.isDir():  # type: ignore
             return
 
         if is_image_file(info.absoluteFilePath()):
@@ -60,8 +62,8 @@ class PreviewPanel(qtw.QLabel):
         target_width = max(self.width() - 24, 150)
         scaled = pixmap.scaled(
             qtc.QSize(target_width, target_width),
-            qtc.Qt.AspectRatioMode.KeepAspectRatio,
-            qtc.Qt.TransformationMode.SmoothTransformation,
+            QtCompat.AspectRatioMode.KeepAspectRatio,
+            QtCompat.TransformationMode.SmoothTransformation,
         )
         self.setPixmap(scaled)
         self.setVisible(True)

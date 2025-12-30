@@ -6,13 +6,15 @@
 FileExplorerExt: File Tree.
 """
 
+from __future__ import annotations
+
 from pathlib import Path
 
 import FreeCAD as App  # type: ignore
 
 from ._files import get_import_module, is_fcstd_file
 from ._intl import tr
-from ._qt import qtc, qtg, qtw
+from ._qt import qtc, qtg, qtw, QtCompat
 from ._state import State
 from ._style import Icons
 
@@ -36,19 +38,19 @@ class FileTree(qtw.QTreeView):
 
         model.rootPathChanged.connect(state.passive_tree_root_changed)
         model.setFilter(Filter.AllDirs | Filter.NoDotAndDotDot | Filter.Files)
-        model.setOptions(qtw.QFileSystemModel.Option.DontUseCustomDirectoryIcons)
+        QtCompat.set_file_system_options(model)
         model.setRootPath(state.get_last_path())
         model.setNameFilterDisables(False)
 
         self.setModel(model)
         self.setRootIndex(model.index(model.rootPath()))
         self.setDragEnabled(True)
-        self.setDragDropMode(qtw.QAbstractItemView.DragDropMode.DragOnly)
+        self.setDragDropMode(QtCompat.DragDropMode.DragOnly)
         self.hideColumn(1)
         self.hideColumn(2)
         self.setColumnWidth(0, 300)
         self.setUniformRowHeights(True)
-        self.setContextMenuPolicy(qtc.Qt.ContextMenuPolicy.CustomContextMenu)
+        self.setContextMenuPolicy(QtCompat.ContextMenuPolicy.CustomContextMenu)
         self.setSortingEnabled(True)
         self.activated.connect(self.on_activated)
         self.clicked.connect(self.on_activated)
@@ -139,7 +141,7 @@ class FileTree(qtw.QTreeView):
                 lambda: self._state.duplicate_file(file_path),
             )
 
-        menu.exec(self.mapToGlobal(position))  # type: ignore -> False positive
+        QtCompat.exec_menu(menu, self.mapToGlobal(position))
 
     def copy_path_to_clipboard(self, path: str) -> None:
         clipboard = qtg.QGuiApplication.clipboard()
@@ -167,11 +169,11 @@ class FileTree(qtw.QTreeView):
     def setReadOnly(self, ro: bool) -> None:
         self._model.setReadOnly(ro)
         self.setDragDropMode(
-            qtw.QAbstractItemView.DragDropMode.DragOnly
+            QtCompat.DragDropMode.DragOnly
             if ro
-            else qtw.QAbstractItemView.DragDropMode.DragDrop
+            else QtCompat.DragDropMode.DragDrop
         )
         self.setDragEnabled(True)
-        self.setDefaultDropAction(qtc.Qt.DropAction.MoveAction)
+        self.setDefaultDropAction(QtCompat.DropAction.MoveAction)
         self.setAcceptDrops(not ro)
         self.setDropIndicatorShown(not ro)

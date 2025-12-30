@@ -17,7 +17,7 @@ import FreeCAD as App  # type: ignore
 from ._files import duplicate_file, import_file, open_file
 from ._history import History
 from ._intl import tr
-from ._qt import qtc, qtg
+from ._qt import qtc, qtg, QtCompat
 
 
 class State(qtc.QObject):
@@ -115,16 +115,16 @@ class State(qtc.QObject):
         s_data["favorites"] = dict(data)
         self._save_config(s_data)
 
-    def get_dock_area(self) -> qtc.Qt.DockWidgetArea:
+    def get_dock_area(self) -> QtCompat.DockWidgetArea:
         config = self._get_config()
         area = str(config.get("dockArea", "LeftDockWidgetArea"))
         return getattr(
-            qtc.Qt.DockWidgetArea,
+            QtCompat.DockWidgetArea,
             area,
-            qtc.Qt.DockWidgetArea.LeftDockWidgetArea,
+            QtCompat.DockWidgetArea.LeftDockWidgetArea,
         )
 
-    def save_dock_area(self, area: qtc.Qt.DockWidgetArea) -> None:
+    def save_dock_area(self, area: QtCompat.DockWidgetArea) -> None:
         s_data = self._get_config()
         s_data["dockArea"] = area.name if area else "LeftDockWidgetArea"
         self._save_config(s_data)
