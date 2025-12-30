@@ -27,3 +27,6 @@ This is a small Addon to bring an internal file explorer to FreeCAD with integra
 
 https://forum.freecad.org/viewtopic.php?t=102035
 
+# Custom icons
+
+Based on https://uxwing.com/ free icons.
