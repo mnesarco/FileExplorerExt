@@ -59,6 +59,8 @@ class FileExplorerWidget(qtw.QWidget):
     def build_top_toolbar(self) -> qtw.QToolBar:
         toolbar = qtw.QToolBar(self)
         toolbar.setObjectName("FileExplorerExt_ToolBar")
+        size = int(toolbar.iconSize().width() * 0.7)
+        toolbar.setIconSize(qtc.QSize(size, size))
 
         QtCompat.addAction(
             toolbar,

@@ -52,7 +52,30 @@ if not IS_QT6_SUPPORTED:
         Orientation = qtc.Qt.Orientation
         ToolButtonStyle = qtc.Qt
         FocusPolicy = qtc.Qt
-        DockWidgetArea = qtc.Qt
+
+        class DockWidgetArea:
+            names = {
+                qtc.Qt.NoDockWidgetArea: "NoDockWidgetArea",
+                qtc.Qt.LeftDockWidgetArea: "LeftDockWidgetArea",
+                qtc.Qt.RightDockWidgetArea: "RightDockWidgetArea",
+                qtc.Qt.TopDockWidgetArea: "TopDockWidgetArea",
+                qtc.Qt.BottomDockWidgetArea: "BottomDockWidgetArea",
+                qtc.Qt.AllDockWidgetAreas: "AllDockWidgetAreas",
+                qtc.Qt.DockWidgetArea_Mask: "DockWidgetArea_Mask",
+            }
+
+        for _key, _val in DockWidgetArea.names.items():
+            setattr(DockWidgetArea, _val, _key)
+
+        @staticmethod
+        def dock_area_name(value):
+            return QtCompat.DockWidgetArea.names.get(
+                value, "LeftDockWidgetArea"
+            )
+
+        @staticmethod
+        def dock_area_str(value):
+            return int(value)
 
         @staticmethod
         def get_event_pos(event):
@@ -67,7 +90,12 @@ if not IS_QT6_SUPPORTED:
             pass
 
         @staticmethod
-        def addAction(widget: qtw.QWidget, icon: qtg.QIcon | None = None, text: str | None = None, call: Callable | None = None) -> qtg.QAction:
+        def addAction(
+            widget: qtw.QWidget,
+            icon: qtg.QIcon | None = None,
+            text: str | None = None,
+            call: Callable | None = None,
+        ) -> qtg.QAction:
             action = qtg.QAction(widget)
             if text:
                 action.setText(text)
@@ -124,6 +152,18 @@ if IS_QT6_SUPPORTED:
             )
 
         @staticmethod
-        def addAction(widget: qtw.QWidget, icon: qtg.QIcon | None = None, text: str | None = None, call: Callable | None = None) -> qtg.QAction:
+        def addAction(
+            widget: qtw.QWidget,
+            icon: qtg.QIcon | None = None,
+            text: str | None = None,
+            call: Callable | None = None,
+        ) -> qtg.QAction:
             return widget.addAction(icon or qtg.QIcon(), text or "", call)
 
+        @staticmethod
+        def dock_area_name(value: qtc.Qt.DockWidgetArea):
+            return (
+                value.name
+                if value is not None
+                else qtc.Qt.DockWidgetArea.LeftDockWidgetArea.name
+            )

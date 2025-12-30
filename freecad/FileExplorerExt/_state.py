@@ -125,8 +125,6 @@ class State(qtc.QObject):
         )
 
     def save_dock_area(self, area: QtCompat.DockWidgetArea) -> None:
-        if QtCompat.Version != 6:
-            return # Qt5  has no enums, no names
         s_data = self._get_config()
-        s_data["dockArea"] = area.name if area else "LeftDockWidgetArea"
+        s_data["dockArea"] = QtCompat.dock_area_name(area)
         self._save_config(s_data)
