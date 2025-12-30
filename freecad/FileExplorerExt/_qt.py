@@ -6,12 +6,18 @@
 FileExplorerExt: Qt
 """
 
+from collections.abc import Callable
+
 from typing import TYPE_CHECKING
 
 if not TYPE_CHECKING:
     import PySide.QtCore as qtc
     import PySide.QtGui as qtg
-    import PySide.QtWidgets as qtw
+
+    try:
+        import PySide.QtWidgets as qtw
+    except ImportError:
+        qtw = qtg
 
     try:
         IS_QT6_SUPPORTED = qtc.qVersion().startswith("6.")
@@ -30,6 +36,8 @@ if not IS_QT6_SUPPORTED:
 
     class QtCompat:
         """Compatibility layer for Qt5 enum differences."""
+
+        Version = 5
 
         ItemFlag = qtc.Qt
         DropAction = qtc.Qt
@@ -58,11 +66,30 @@ if not IS_QT6_SUPPORTED:
         def set_file_system_options(model):
             pass
 
+        @staticmethod
+        def addAction(widget: qtw.QWidget, icon: qtg.QIcon | None = None, text: str | None = None, call: Callable | None = None) -> qtg.QAction:
+            action = qtg.QAction()
+            if text:
+                action.setText(text)
+            if icon:
+                action.setIcon(icon)
+            if call:
+                action.triggered.connect(call)
+            if isinstance(widget, qtw.QToolBar):
+                btn = qtw.QToolButton(widget)
+                btn.setDefaultAction(action)
+                widget.addWidget(btn)
+            else:
+                widget.addAction(action)
+            return action
+
 
 if IS_QT6_SUPPORTED:
 
     class QtCompat:
         """Compatibility layer for Qt6 enum differences."""
+
+        Version = 6
 
         ItemFlag = qtc.Qt.ItemFlag
         DropAction = qtc.Qt.DropAction
@@ -95,3 +122,8 @@ if IS_QT6_SUPPORTED:
             model.setOptions(
                 qtw.QFileSystemModel.Option.DontUseCustomDirectoryIcons
             )
+
+        @staticmethod
+        def addAction(widget: qtw.QWidget, icon: qtg.QIcon | None = None, text: str | None = None, call: Callable | None = None) -> qtg.QAction:
+            return widget.addAction(icon or qtg.QIcon(), text or "", call)
+

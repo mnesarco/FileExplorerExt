@@ -60,17 +60,20 @@ class FileExplorerWidget(qtw.QWidget):
         toolbar = qtw.QToolBar(self)
         toolbar.setObjectName("FileExplorerExt_ToolBar")
 
-        toolbar.addAction(
+        QtCompat.addAction(
+            toolbar,
             Icons.NavBack,
             tr("FileExplorerExt", "Back"),
             self._state.navigate_back,
         )
-        toolbar.addAction(
+        QtCompat.addAction(
+            toolbar,
             Icons.NavForward,
             tr("FileExplorerExt", "Forward"),
             self._state.navigate_forward,
         )
-        toolbar.addAction(
+        QtCompat.addAction(
+            toolbar,
             Icons.NavUp,
             tr("FileExplorerExt", "Up"),
             self.tree.go_up,

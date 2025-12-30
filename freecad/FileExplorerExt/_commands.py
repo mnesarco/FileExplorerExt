@@ -13,6 +13,7 @@ import FreeCADGui as Gui  # type: ignore
 
 from ._explorer import toggle
 from ._intl import tr
+from ._qt import QtCompat
 
 
 class FEE_ToggleExplorer:
@@ -52,7 +53,9 @@ class FEE_ToggleExplorer:
     def Install(self) -> None:
         Gui.addCommand(self.Name, self)
         window = Gui.getMainWindow()
-        action = window.addAction(
+        action = QtCompat.addAction(
+            window,
+            None,
             tr("FileExplorerExt", "Toggle File Explorer View"),
             lambda: Gui.runCommand(self.Name, 0),
         )

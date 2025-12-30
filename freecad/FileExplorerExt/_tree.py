@@ -97,45 +97,52 @@ class FileTree(qtw.QTreeView):
         menu = qtw.QMenu(self)
 
         if is_fcstd or is_importable:
-            menu.addAction(
+            QtCompat.addAction(
+                menu,
                 Icons.SysOpen,
                 tr("FileExplorerExt", "Open"),
                 lambda: self._state.open_file(file_path),
             )
 
         if doc and is_importable and not is_fcstd:
-            menu.addAction(
+            QtCompat.addAction(
+                menu,
                 Icons.Import,
                 tr("FileExplorerExt", "Import into current document"),
                 lambda: self._state.import_file(file_path),
             )
 
         if not is_dir and not is_fcstd:
-            menu.addAction(
+            QtCompat.addAction(
+                menu,
                 Icons.SysOpen,
                 tr("FileExplorerExt", "Open with Default App"),
                 lambda: self._state.open_with_sys_app(file_path),
             )
 
-        menu.addAction(
+        QtCompat.addAction(
+            menu,
             Icons.Copy,
             tr("FileExplorerExt", "Copy Path"),
             lambda: self.copy_path_to_clipboard(file_path),
         )
 
         if is_dir:
-            menu.addAction(
+            QtCompat.addAction(
+                menu,
                 Icons.SysOpen,
                 tr("FileExplorerExt", "Browse"),
                 lambda: self._state.open_with_sys_app(file_path),
             )
-            menu.addAction(
+            QtCompat.addAction(
+                menu,
                 Icons.DefaultDir,
                 tr("FileExplorerExt", "Set as default dir"),
                 lambda: self._state.set_default_dir(file_path),
             )
         else:
-            menu.addAction(
+            QtCompat.addAction(
+                menu,
                 Icons.Copy,
                 tr("FileExplorerExt", "Duplicate"),
                 lambda: self._state.duplicate_file(file_path),

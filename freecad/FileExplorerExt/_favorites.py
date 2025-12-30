@@ -350,18 +350,22 @@ class FavoritesWidget(qtw.QListView):
 
         menu = qtw.QMenu(self)
 
-        menu.addAction(
+        QtCompat.addAction(
+            menu,
+            None,
             tr("FileExplorerExt", "Rename"),
             lambda: self.rename_favorite(index),
         )
 
-        menu.addAction(
+        QtCompat.addAction(
+            menu,
             Icons.Trash,
             tr("FileExplorerExt", "Remove from Favorites"),
             lambda: self.remove_favorite(index),
         )
 
-        menu.addAction(
+        QtCompat.addAction(
+            menu,
             Icons.DefaultDir,
             tr("FileExplorerExt", "Set as default dir"),
             lambda: self._state.set_default_dir(fav.path),
