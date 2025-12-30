@@ -20,7 +20,8 @@ This is a small Addon to bring an internal file explorer to FreeCAD with integra
 
 # Prerequisite
 
-- Qt6
+- Qt6 (Officially supported)
+- Qt5 (May work, but officially unsupported)
 
 # Forum
 
