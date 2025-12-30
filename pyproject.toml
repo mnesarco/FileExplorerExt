@@ -1,6 +1,6 @@
 [project]
 name = "FileExplorerExt"
-version = "1.0.0-dev.3"
+version = "1.0.0-dev.4"
 description = "FreeCAD File Explorer"
 readme = "README.md"
 requires-python = ">=3.10"
