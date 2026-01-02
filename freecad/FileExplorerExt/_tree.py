@@ -17,6 +17,8 @@ from ._intl import tr
 from ._qt import qtc, qtg, qtw, QtCompat
 from ._state import State
 from ._style import Icons
+from ._api import API
+
 
 Filter = qtc.QDir.Filter
 QDir = qtc.QDir
@@ -147,6 +149,17 @@ class FileTree(qtw.QTreeView):
                 tr("FileExplorerExt", "Duplicate"),
                 lambda: self._state.duplicate_file(file_path),
             )
+
+        paths = [Path(file_path)]
+        custom_actions = API.get_custom_actions(paths)
+        if custom_actions:
+            for action in custom_actions:
+                QtCompat.addAction(
+                    menu,
+                    action.icon if isinstance(action.icon, qtg.QIcon) else qtg.QIcon(action.icon), # type: ignore
+                    action.text,
+                    lambda act=action: act.activated(paths),
+                )
 
         QtCompat.exec_menu(menu, self.mapToGlobal(position))
 

@@ -5,3 +5,5 @@
 """
 Advanced File Explorer FreeCAD Addon.
 """
+
+from ._api import API as API, CustomFileAction as CustomFileAction
