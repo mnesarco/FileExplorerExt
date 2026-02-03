@@ -15,6 +15,8 @@ import FreeCAD as App  # type: ignore
 import FreeCADGui as Gui  # type: ignore
 
 from ._qt import qtg
+from ._preferences import add_recent_file
+
 
 SUPPORTED_IMAGE_FORMATS = set([
     f".{str(f, 'utf-8')}".lower()
@@ -48,6 +50,7 @@ def open_file(file_path: str) -> None:
     ext = (file_path.split(".")[-1] or "").lower()
     if ext == "fcstd":
         App.openDocument(file_path)
+        add_recent_file(file_path)
     else:
         module = get_import_module(file_path)
         if module:
@@ -67,6 +70,8 @@ def import_file(file_path: str) -> None:
     doc_name = App.ActiveDocument.Name if App.ActiveDocument else None
     if ext == "fcstd":
         Gui.insert(file_path, doc_name)
+        add_recent_file(file_path)
+        return
 
     module = get_import_module(file_path)
     if module:

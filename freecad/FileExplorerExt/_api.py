@@ -44,8 +44,6 @@ class FileExplorerApi:
 
     def add_action_provider(self, provider: CustomActionProvider, key: object = None) -> None:
         self._state.action_providers[key or object()] = provider
-        for k,v in self._state.action_providers.items():
-            print(k, "=", v)
 
     def get_custom_actions(self, paths: list[Path]) -> list[CustomFileAction]:
         actions: list[CustomFileAction] = []
