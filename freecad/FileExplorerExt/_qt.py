@@ -52,6 +52,7 @@ if not IS_QT6_SUPPORTED:
         Orientation = qtc.Qt.Orientation
         ToolButtonStyle = qtc.Qt
         FocusPolicy = qtc.Qt
+        PatternOption = qtc.QRegularExpression
 
         class DockWidgetArea:
             names = {
@@ -133,6 +134,7 @@ if IS_QT6_SUPPORTED:
         ToolButtonStyle = qtc.Qt.ToolButtonStyle
         FocusPolicy = qtc.Qt.FocusPolicy
         DockWidgetArea = qtc.Qt.DockWidgetArea
+        PatternOption = qtc.QRegularExpression.PatternOption
 
         @staticmethod
         def get_event_pos(event: qtg.QMouseEvent | qtg.QDropEvent):

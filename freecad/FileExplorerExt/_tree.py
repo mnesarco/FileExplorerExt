@@ -24,6 +24,30 @@ Filter = qtc.QDir.Filter
 QDir = qtc.QDir
 
 
+class ExcludingFilterProxy(qtc.QSortFilterProxyModel):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setDynamicSortFilter(False)
+        self.exclude_regex = qtc.QRegularExpression(r"^.*\.fcbak$", QtCompat.PatternOption.CaseInsensitiveOption)
+
+    def filterAcceptsRow(self, source_row, source_parent):
+        model: qtw.QFileSystemModel = self.sourceModel()  # type: ignore
+        index = model.index(source_row, 0, source_parent)
+
+        if not index.isValid():
+            return False
+
+        if model.isDir(index):
+            return True
+
+        name = model.fileName(index)
+        if self.exclude_regex and self.exclude_regex.match(name).hasMatch():
+            return False
+
+        return True
+
+
 class FileTree(qtw.QTreeView):
     """
     File Tree Widget.
@@ -34,18 +58,23 @@ class FileTree(qtw.QTreeView):
         self.setObjectName("FileExplorerExt_Tree")
 
         model = qtw.QFileSystemModel(self)
+        model.setFilter(Filter.AllDirs | Filter.NoDotAndDotDot | Filter.Files)
+        model.setNameFilterDisables(False)
+        QtCompat.set_file_system_options(model)
+
+        proxy = ExcludingFilterProxy(self)
+        proxy.setSourceModel(model)
+        proxy.setFilterKeyColumn(0)
 
         self._state = state
         self._model = model
+        self._proxy = proxy
 
         model.rootPathChanged.connect(state.passive_tree_root_changed)
-        model.setFilter(Filter.AllDirs | Filter.NoDotAndDotDot | Filter.Files)
-        QtCompat.set_file_system_options(model)
-        model.setRootPath(state.get_last_path())
-        model.setNameFilterDisables(False)
+        self.set_root_path(state.get_last_path())
 
-        self.setModel(model)
-        self.setRootIndex(model.index(model.rootPath()))
+        self.setModel(proxy)
+        self.setRootIndex(self.root_index())
         self.setDragEnabled(True)
         self.setDragDropMode(QtCompat.DragDropMode.DragOnly)
         self.hideColumn(1)
@@ -60,17 +89,26 @@ class FileTree(qtw.QTreeView):
         self.customContextMenuRequested.connect(self.on_context_menu)
         self._state.request_root_change.connect(self.on_root_change_requested)
 
+    def set_root_path(self, path: str) -> qtc.QModelIndex:
+        return self._proxy.mapFromSource(self._model.setRootPath(path))
+
+    def root_index(self) -> qtc.QModelIndex:
+        return self._proxy.mapFromSource(self._model.index(self._model.rootPath()))
+
+    def file_path(self, index: qtc.QModelIndex) -> str:
+        return self._model.filePath(self._proxy.mapToSource(index))
+
     def on_root_change_requested(self, path: str) -> None:
-        rootIndex = self._model.setRootPath(path)
+        rootIndex = self.set_root_path(path)
         self.setRootIndex(rootIndex)
         self._state.tree_root_changed.emit(path)
 
     def on_double_click(self, index: qtc.QModelIndex) -> None:
         if index.isValid():
-            str_path = self._model.filePath(index)
+            str_path = self.file_path(index)
             path = Path(str_path)
             if path.is_dir():
-                rootIndex = self._model.setRootPath(str_path)
+                rootIndex = self.set_root_path(str_path)
                 self.setRootIndex(rootIndex)
                 self._state.tree_root_changed.emit(str_path)
             elif is_fcstd_file(str_path) or get_import_module(str_path):
@@ -80,7 +118,7 @@ class FileTree(qtw.QTreeView):
 
     def on_activated(self, index: qtc.QModelIndex) -> None:
         if index.isValid():
-            path = self._model.filePath(index)
+            path = self.file_path(index)
             self._state.path_changed.emit(path)
         else:
             self._state.path_changed.emit(None)
@@ -90,7 +128,7 @@ class FileTree(qtw.QTreeView):
         if not index.isValid():
             return
 
-        file_path = self._model.filePath(index)
+        file_path = self.file_path(index)
         is_fcstd = is_fcstd_file(file_path)
         is_dir = Path(file_path).is_dir()
         is_importable = not is_dir and get_import_module(file_path)
@@ -170,7 +208,7 @@ class FileTree(qtw.QTreeView):
     def go_up(self) -> None:
         path = Path(self._model.rootPath())
         if path.parent:
-            rootIndex = self._model.setRootPath(str(path.parent))
+            rootIndex = self.set_root_path(str(path.parent))
             self.setRootIndex(rootIndex)
             self._state.tree_root_changed.emit(str(path.parent))
 
