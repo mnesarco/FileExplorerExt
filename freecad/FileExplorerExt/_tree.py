@@ -29,23 +29,8 @@ class ExcludingFilterProxy(qtc.QSortFilterProxyModel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setDynamicSortFilter(False)
-        self.exclude_regex = qtc.QRegularExpression(r"^.*\.fcbak$", QtCompat.PatternOption.CaseInsensitiveOption)
-
-    def filterAcceptsRow(self, source_row, source_parent):
-        model: qtw.QFileSystemModel = self.sourceModel()  # type: ignore
-        index = model.index(source_row, 0, source_parent)
-
-        if not index.isValid():
-            return False
-
-        if model.isDir(index):
-            return True
-
-        name = model.fileName(index)
-        if self.exclude_regex and self.exclude_regex.match(name).hasMatch():
-            return False
-
-        return True
+        self.exclude_regex = qtc.QRegularExpression(r"^(?!.*\.fcbak$)", QtCompat.PatternOption.CaseInsensitiveOption)
+        self.setFilterRegularExpression(self.exclude_regex)
 
 
 class FileTree(qtw.QTreeView):
