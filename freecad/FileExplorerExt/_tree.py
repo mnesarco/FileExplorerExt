@@ -18,6 +18,7 @@ from ._qt import qtc, qtg, qtw, QtCompat
 from ._state import State
 from ._style import Icons
 from ._api import API
+from ._preferences import add_recent_file
 
 
 Filter = qtc.QDir.Filter
@@ -196,6 +197,42 @@ class FileTree(qtw.QTreeView):
             rootIndex = self.set_root_path(str(path.parent))
             self.setRootIndex(rootIndex)
             self._state.tree_root_changed.emit(str(path.parent))
+
+    def save_here(self) -> None:
+        if doc := App.ActiveDocument:
+            path = Path(self._model.rootPath())
+            if not path.exists() or not path.is_dir():
+                App.Console.PrintError("Invalid directory\n")
+                return
+
+            if file := doc.FileName:
+                file = Path(file)
+                if file.exists():
+                    if path.samefile(file.parent):
+                        doc.save()
+                    else:
+                        doc.saveAs(str(path / file.name))
+                        App.Console.PrintNotification(f"Saved to {doc.FileName}. Old version left at {file!s}\n")
+                    add_recent_file(str(path / file.name))
+            else:
+                new_name, ok = qtw.QInputDialog.getText(
+                    self,
+                    tr("FileExplorerExt", "Save as..."),
+                    tr("FileExplorerExt", "Enter file name:"),
+                    QtCompat.EchoMode.Normal,
+                    f"{doc.Name}.FCStd",
+                )
+                if new_name and ok:
+                    if not new_name.lower().endswith(".fcstd"):
+                        new_name = f"{new_name}.FCStd"
+                    dst = path / new_name
+                    title = tr("FileExplorerExt", "Override confirmation:")
+                    prompt = tr("FileExplorerExt", "File {} already exists. Override?").format(str(dst))
+                    if dst.exists() and qtw.QMessageBox.question(self, title, prompt) != QtCompat.StandardButton.Yes:
+                        return
+                    doc.saveAs(str(path / new_name))
+                    add_recent_file(str(path / new_name))
+
 
     def root(self) -> str:
         return self._model.rootPath()

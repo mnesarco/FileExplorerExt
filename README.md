@@ -30,3 +30,8 @@ https://forum.freecad.org/viewtopic.php?t=102035
 # Custom icons
 
 Based on https://uxwing.com/ free icons.
+
+# Icons based on Bootstrap Icons licensed under MIT License
+
+https://github.com/twbs/icons
+

@@ -32,3 +32,4 @@ class Icons:
     NavForward = customIcon("forward")
     Trash = customIcon("trash")
     Rename = customIcon("rename")
+    Save = customIcon("save")

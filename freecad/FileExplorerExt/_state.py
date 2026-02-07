@@ -11,6 +11,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import cast
+from contextlib import suppress
+import os
 
 import FreeCAD as App  # type: ignore
 
@@ -80,6 +82,8 @@ class State(qtc.QObject):
     def on_passive_tree_root_changed(self, path: str) -> None:
         if not self._navigating:
             self._history.add(path)
+        with suppress(OSError):
+            os.chdir(path)
 
     def _navigate(self, path: str) -> None:
         self._navigating = True

@@ -80,6 +80,12 @@ class FileExplorerWidget(qtw.QWidget):
             tr("FileExplorerExt", "Up"),
             self.tree.go_up,
         )
+        QtCompat.addAction(
+            toolbar,
+            Icons.Save,
+            tr("FileExplorerExt", "Save here"),
+            self.tree.save_here,
+        )
 
         filter_input = qtw.QLineEdit(self)
         filter_input.setPlaceholderText(tr("FileExplorerExt", "Filter..."))
