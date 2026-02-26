@@ -9,7 +9,6 @@ This Macro adds custom actions to the File context menu.
 """
 
 from freecad.FileExplorerExt import API
-from freecad.FileExplorerExt import CustomFileAction
 from pathlib import Path
 
 
@@ -22,7 +21,7 @@ def my_actions(paths: list[Path]):
 
     # This action will apply to any file
     actions = [
-        CustomFileAction(
+        API.CustomFileAction(
             text="Example action",
             icon=":/icons/edit_OK.svg",
             activated=lambda p: print(f"File: {p!s}"),
@@ -32,7 +31,7 @@ def my_actions(paths: list[Path]):
     # This action will apply to svg files
     if paths[0].suffix == ".svg":
         actions.append(
-            CustomFileAction(
+            API.CustomFileAction(
                 text="Example action (Only SVG)",
                 icon=":/icons/edit_OK.svg",
                 activated=lambda p: print(f"SVG: {p!s}"),

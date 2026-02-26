@@ -7,14 +7,17 @@ FileExplorerExt: Translation.
 """
 
 import FreeCAD as App  # type: ignore
+from pathlib import Path
 
 tr = App.Qt.translate
 
 
 def install_translations() -> None:
-    import FreeCADGui as Gui  # type: ignore
-    from pathlib import Path
+    if not App.GuiUp:
+        msg = "Translations must be loaded only after GUI is up."
+        raise RuntimeError(msg)
 
-    Gui.addLanguagePath(
+    App.Gui.addLanguagePath(
         str(Path(__file__).parent / "resources" / "translations")
     )
+

@@ -72,12 +72,9 @@ if not IS_QT6_SUPPORTED:
         @staticmethod
         def dock_area_name(value):
             return QtCompat.DockWidgetArea.names.get(
-                value, "LeftDockWidgetArea"
+                value,
+                "LeftDockWidgetArea",
             )
-
-        @staticmethod
-        def dock_area_str(value):
-            return int(value)
 
         @staticmethod
         def get_event_pos(event):

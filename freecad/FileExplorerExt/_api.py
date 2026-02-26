@@ -15,13 +15,13 @@ FileActionFn: TypeAlias = Callable[[list[Path]], None]
 
 
 @dataclass(kw_only=True)
-class CustomFileAction:
+class _CustomFileAction:
     text: str
     icon: object
     activated: FileActionFn
 
 
-CustomActionProvider: TypeAlias = Callable[[list[Path]], list[CustomFileAction]]
+CustomActionProvider: TypeAlias = Callable[[list[Path]], list[_CustomFileAction]]
 
 
 @dataclass
@@ -33,6 +33,7 @@ class ApiState:
 
 
 class FileExplorerApi:
+    CustomFileAction = _CustomFileAction
     _state: ApiState
 
     def __init__(self):
@@ -46,7 +47,7 @@ class FileExplorerApi:
         self._state.action_providers[key or object()] = provider
 
     def get_custom_actions(self, paths: list[Path]) -> list[CustomFileAction]:
-        actions: list[CustomFileAction] = []
+        actions: list[_CustomFileAction] = []
         if not self._state.action_providers:
             return actions
 

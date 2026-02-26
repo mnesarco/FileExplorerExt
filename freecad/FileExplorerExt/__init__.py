@@ -6,4 +6,6 @@
 Advanced File Explorer FreeCAD Addon.
 """
 
-from ._api import API as API, CustomFileAction as CustomFileAction
+from ._api import API as API, _CustomFileAction as CustomFileAction
+
+__all__ = ("API", "CustomFileAction")

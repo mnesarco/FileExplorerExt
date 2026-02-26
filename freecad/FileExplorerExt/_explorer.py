@@ -169,8 +169,11 @@ class FileExplorerDockWidget(qtw.QDockWidget):
     def start(self) -> None:
         window = cast(qtw.QMainWindow, self.parent())
         setattr(Gui, "__FileExplorerExt__", self)
+
         area = self.file_explorer._state.get_dock_area()
-        window.addDockWidget(area, self)
+        if area and area != QtCompat.DockWidgetArea.NoDockWidgetArea:
+            window.addDockWidget(area, self)
+
         self.setVisible(True)
         self.raise_()
         qtc.QTimer.singleShot(
