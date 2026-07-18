@@ -17,6 +17,8 @@ This is a small Addon to bring an internal file explorer to FreeCAD with integra
 - Dockable
 - Drag & Drop
 - Context menu actions
+- Execute Macros/Scripts from any directory
+- Synchronized working directory
 
 # Prerequisite
 
