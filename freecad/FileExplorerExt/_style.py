@@ -22,6 +22,7 @@ class Icons:
     HomeDir = customIcon("home")
     FavoriteDir = customIcon("fav")
     DefaultDir = customIcon("default")
+    WorkingDir = customIcon("working-dir")
     SysOpen = customIcon("open")
     Import = customIcon("import")
     Copy = customIcon("copy")
@@ -33,3 +34,4 @@ class Icons:
     Trash = customIcon("trash")
     Rename = customIcon("rename")
     Save = customIcon("save")
+    PlayMacro = customIcon("play-macro")

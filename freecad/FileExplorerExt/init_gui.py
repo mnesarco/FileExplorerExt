@@ -2,8 +2,10 @@
 # SPDX-FileCopyrightText: 2025 Frank David Martínez Muñoz <mnesarco@gmail.com>
 # SPDX-FileNotice: Part of the File Explorer addon.
 
+# ruff: noqa: E402 F401
+
 from ._qt import IS_QT6_SUPPORTED
-import FreeCAD as App  # type: ignore
+import FreeCAD as App
 
 if not IS_QT6_SUPPORTED:
     App.Console.PrintWarning(
@@ -16,6 +18,7 @@ install_translations()
 
 from ._explorer import show
 from ._commands import FEE_ToggleExplorer
+from . import _actions
 
 cmd = FEE_ToggleExplorer()
 cmd.Install()

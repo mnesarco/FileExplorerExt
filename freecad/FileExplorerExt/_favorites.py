@@ -10,9 +10,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from collections.abc import Sequence
+from collections.abc import Sequence, Callable
 
-import FreeCAD as App  # type: ignore
+import FreeCAD as App
 
 from ._intl import tr
 from ._qt import qtc, qtg, qtw, QtCompat
@@ -24,19 +24,30 @@ Role = qtc.Qt.ItemDataRole
 
 @dataclass
 class Favorite:
-    path: str
+    path: str | Callable
     name: str = ""
     kind: str = "user"
     order: int = 2
 
     def __post_init__(self) -> None:
-        if not self.name:
+        if not self.name and isinstance(self.path, str):
             self.name = Path(self.path).stem
+
+    @property
+    def path_str(self) -> str:
+        return self.path if isinstance(self.path, str) else self.path()
+
+    @staticmethod
+    def working_dir() -> str:
+        doc = App.ActiveDocument
+        if doc and (path := getattr(doc, "FileName", None)):
+            return str(Path(path).parent)
+        return qtc.QDir.homePath()
 
 
 RootDir = Favorite(
     path="",
-    name=tr("FileExplorerExt", "This PC"),
+    name=tr("FileExplorerExt", "Hard drive"),
     kind="root",
     order=0,
 )
@@ -55,6 +66,13 @@ MacrosDir = Favorite(
     order=1,
 )
 
+WorkingDir = Favorite(
+    path=Favorite.working_dir,
+    name=tr("FileExplorerExt", "Current"),
+    kind="work",
+    order=0,
+)
+
 
 class DuplicatedFavoriteError(Exception):
     pass
@@ -71,12 +89,13 @@ class FavoritesModel(qtc.QAbstractListModel):
         parent: qtc.QObject | None = None,
     ) -> None:
         super().__init__(parent)
-        self._items: list[Favorite] = [RootDir, HomeDir, MacrosDir] + user
+        self._items: list[Favorite] = [WorkingDir, HomeDir, MacrosDir, RootDir] + user
         self.icons = {
             "root": Icons.RootDir,
             "home": Icons.HomeDir,
             "macro": Icons.Macros,
             "user": Icons.FavoriteDir,
+            "work": Icons.WorkingDir,
         }
 
     def rowCount(
@@ -104,7 +123,7 @@ class FavoritesModel(qtc.QAbstractListModel):
             case Role.UserRole:
                 return item
             case Role.ToolTipRole:
-                return item.path
+                return item.path_str
             case _:
                 return None
 
@@ -138,12 +157,12 @@ class FavoritesModel(qtc.QAbstractListModel):
         if indexes:
             # Store the row being dragged
             item = self._items[indexes[0].row()]
-            mime_data.setText(item.path)
+            mime_data.setText(item.path_str)
         return mime_data
 
     def addItem(self, fav: Favorite) -> None:
         for it in self._items:
-            if it.path == fav.path:
+            if it.path_str == fav.path_str:
                 raise DuplicatedFavoriteError
 
         row = len(self._items)
@@ -181,7 +200,7 @@ class FavoritesModel(qtc.QAbstractListModel):
 
     def findIndex(self, path: str) -> qtc.QModelIndex | None:
         for row, fav in enumerate(self._items):
-            if path == fav.path:
+            if path == fav.path_str:
                 return self.index(row, 0)
         return None
 
@@ -217,7 +236,7 @@ class FavoritesModel(qtc.QAbstractListModel):
         return True
 
     def get_state(self) -> list[tuple[str, str | None]]:
-        return [(f.path, f.name) for f in self._items if f.kind == "user"]
+        return [(f.path_str, f.name) for f in self._items if f.kind == "user"]
 
 
 class FavoritesWidget(qtw.QListView):
@@ -264,6 +283,15 @@ class FavoritesWidget(qtw.QListView):
         # rename_action.setPriority(QtCompat.Priority.LowPriority)
         # rename_action.setShortcutContext(QtCompat.ShortcutContext.WidgetShortcut)
 
+    def showEvent(self, e):
+        App.addDocumentObserver(self)
+        self.slotActivateDocument(None)
+        super().showEvent(e)
+
+    def hideEvent(self, e):
+        App.removeDocumentObserver(self)
+        super().hideEvent(e)
+
     def on_tree_root_changed(self, path: str) -> None:
         index = self._model.findIndex(path)
         if index and index.isValid():
@@ -275,9 +303,9 @@ class FavoritesWidget(qtw.QListView):
 
     def on_activated(self, index: qtc.QModelIndex) -> None:
         if index.isValid():
-            path = self._model.getItem(index.row())
-            if path:
-                self._state.request_root_change.emit(path.path)
+            item = self._model.getItem(index.row())
+            if item:
+                self._state.request_root_change.emit(item.path_str)
 
     def dragEnterEvent(self, event: qtg.QDragEnterEvent) -> None:
         if event.mimeData().hasUrls() or event.mimeData().hasText():
@@ -368,7 +396,7 @@ class FavoritesWidget(qtw.QListView):
             menu,
             Icons.DefaultDir,
             tr("FileExplorerExt", "Set as default dir"),
-            lambda: self._state.set_default_dir(fav.path),
+            lambda: self._state.set_default_dir(fav.path_str),
         )
 
         QtCompat.exec_menu(menu, self.mapToGlobal(position))
@@ -407,3 +435,10 @@ class FavoritesWidget(qtw.QListView):
             fav.name = new_name
             self._state.save_favorites(self._model.get_state())
             self._model.dataChanged.emit(index, index)
+
+    def slotActivateDocument(self, _) -> None:
+        index = self.currentIndex()
+        if index.isValid():
+            item = self._model.getItem(index.row())
+            if item and item.kind == "work":
+                self._state.request_root_change.emit(item.path_str)
