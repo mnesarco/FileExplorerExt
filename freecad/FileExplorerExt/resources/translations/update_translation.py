@@ -11,7 +11,7 @@ Usage:
 
 import argparse
 import shutil
-import subprocess
+import subprocess  # nosec
 import sys
 from pathlib import Path
 
@@ -94,7 +94,7 @@ def print_err(*args, **kwargs) -> None:
     print(*args, **kwargs)
 
 
-def find_tools() -> tuple[str, str, str]:
+def find_tools() -> tuple[str, str, str | None]:
     """Find lupdate and lrelease in the current environment (uv)."""
     lupdate = shutil.which("pyside6-lupdate")
     lrelease = shutil.which("pyside6-lrelease")
@@ -153,7 +153,7 @@ def update_locale(lupdate_path: str, locale: str | None = None) -> None:
         ]
 
     try:
-        subprocess.run(cmd, check=True)
+        subprocess.run(cmd, check=True)  # nosec
     except subprocess.CalledProcessError as e:
         print_err(f"Error running lupdate: {e}")
         sys.exit(1)
@@ -168,7 +168,7 @@ def release_locale(lrelease_path: str, ts_file: Path) -> None:
         return
     print(f"Releasing {ts_file}...")
     try:
-        subprocess.run([lrelease_path, str(ts_file)], check=True)
+        subprocess.run([lrelease_path, str(ts_file)], check=True)  # nosec
     except subprocess.CalledProcessError as e:
         print_err(f"Error running lrelease: {e}")
         sys.exit(1)
@@ -273,7 +273,7 @@ def main() -> None:
             print_err(f"To open manually: pyside6-linguist {ts_file}")
         else:
             print(f"Opening {ts_file} in Qt Linguist...")
-            subprocess.run([linguist, str(ts_file)])
+            subprocess.run([linguist, str(ts_file)])  # nosec
     else:
         parse_args().print_help()
 

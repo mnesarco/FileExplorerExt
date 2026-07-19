@@ -28,7 +28,11 @@ def action_run_macro(paths: list[Path]) -> None:
 
         env = dict(mod_main.__dict__)
         code = compile(path.read_text("utf-8"), str(path), "exec")
-        exec(code, env, env)
+
+        # This may be reported as a security issue, but the purpose of this
+        # code is to allow the user to run arbitrary code on its behalf.
+        exec(code, env, env)  # nosec
+
     finally:
         if temp:
             sys.path.remove(parent)
