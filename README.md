@@ -37,3 +37,6 @@ Based on https://uxwing.com/ free icons.
 
 https://github.com/twbs/icons
 
+# AI Policy
+
+AI generated contributions will be rejected.
