@@ -8,14 +8,15 @@ FileExplorerExt: Favorites.
 
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from collections.abc import Sequence, Callable
+from typing import Literal
 
 import FreeCAD as App
 
 from ._intl import tr
-from ._qt import qtc, qtg, qtw, QtCompat
+from ._qt import QtCompat, qtc, qtg, qtw
 from ._state import State
 from ._style import Icons
 
@@ -26,7 +27,7 @@ Role = qtc.Qt.ItemDataRole
 class Favorite:
     path: str | Callable
     name: str = ""
-    kind: str = "user"
+    kind: Literal["user", "root", "home", "macro", "work", "recent"] = "user"
     order: int = 2
 
     def __post_init__(self) -> None:
@@ -36,6 +37,12 @@ class Favorite:
     @property
     def path_str(self) -> str:
         return self.path if isinstance(self.path, str) else self.path()
+
+    @property
+    def tooltip(self) -> str:
+        if self.kind == "recent":
+            return tr("FileExplorerExt", "Recent files")
+        return self.path_str
 
     @staticmethod
     def working_dir() -> str:
@@ -73,6 +80,13 @@ WorkingDir = Favorite(
     order=0,
 )
 
+RecentFiles = Favorite(
+    path="",
+    name=tr("FileExplorerExt", "Recent"),
+    kind="recent",
+    order=0,
+)
+
 
 class DuplicatedFavoriteError(Exception):
     pass
@@ -89,13 +103,20 @@ class FavoritesModel(qtc.QAbstractListModel):
         parent: qtc.QObject | None = None,
     ) -> None:
         super().__init__(parent)
-        self._items: list[Favorite] = [WorkingDir, HomeDir, MacrosDir, RootDir] + user
+        self._items: list[Favorite] = [
+            RecentFiles,
+            WorkingDir,
+            HomeDir,
+            MacrosDir,
+            RootDir,
+        ] + user
         self.icons = {
             "root": Icons.RootDir,
             "home": Icons.HomeDir,
             "macro": Icons.Macros,
             "user": Icons.FavoriteDir,
             "work": Icons.WorkingDir,
+            "recent": Icons.RecentFiles,
         }
 
     def rowCount(
@@ -123,7 +144,7 @@ class FavoritesModel(qtc.QAbstractListModel):
             case Role.UserRole:
                 return item
             case Role.ToolTipRole:
-                return item.path_str
+                return item.tooltip
             case _:
                 return None
 
@@ -162,7 +183,7 @@ class FavoritesModel(qtc.QAbstractListModel):
 
     def addItem(self, fav: Favorite) -> None:
         for it in self._items:
-            if it.path_str == fav.path_str:
+            if it.path_str == fav.path_str and it.name == fav.name:
                 raise DuplicatedFavoriteError
 
         row = len(self._items)
@@ -305,7 +326,11 @@ class FavoritesWidget(qtw.QListView):
         if index.isValid():
             item = self._model.getItem(index.row())
             if item:
-                self._state.request_root_change.emit(item.path_str)
+                if item.kind == "recent":
+                    self._state.request_recent_files.emit()
+                else:
+                    self._state.request_root_change.emit(item.path_str)
+                    self._state.request_show_tree.emit()
 
     def dragEnterEvent(self, event: qtg.QDragEnterEvent) -> None:
         if event.mimeData().hasUrls() or event.mimeData().hasText():

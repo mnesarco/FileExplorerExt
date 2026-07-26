@@ -30,7 +30,7 @@ class ExcludingFilterProxy(qtc.QSortFilterProxyModel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setDynamicSortFilter(False)
-        self.exclude_regex = qtc.QRegularExpression(r"^(?!.*\.fcbak$)", QtCompat.PatternOption.CaseInsensitiveOption)
+        self.exclude_regex = qtc.QRegularExpression(r"^(?!.*\.(fcbak|fcstd1)$)", QtCompat.PatternOption.CaseInsensitiveOption)
         self.setFilterRegularExpression(self.exclude_regex)
 
 

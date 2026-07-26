@@ -54,6 +54,13 @@ if not IS_QT6_SUPPORTED:
         FocusPolicy = qtc.Qt
         PatternOption = qtc.QRegularExpression
         StandardButton = qtw.QMessageBox
+        ItemDataRole = qtc.Qt
+
+        ListView_ViewMode = qtw.QListView
+        ListView_Flow = qtw.QListView
+        ListView_ResizeMode = qtw.QListView
+        ListView_Movement = qtw.QListView
+
 
         class DockWidgetArea:
             names = {
@@ -134,6 +141,12 @@ if IS_QT6_SUPPORTED:
         DockWidgetArea = qtc.Qt.DockWidgetArea
         PatternOption = qtc.QRegularExpression.PatternOption
         StandardButton = qtw.QMessageBox.StandardButton
+        ItemDataRole = qtc.Qt.ItemDataRole
+
+        ListView_ViewMode = qtw.QListView.ViewMode
+        ListView_Flow = qtw.QListView.Flow
+        ListView_ResizeMode = qtw.QListView.ResizeMode
+        ListView_Movement = qtw.QListView.Movement
 
         @staticmethod
         def get_event_pos(event: qtg.QMouseEvent | qtg.QDropEvent):

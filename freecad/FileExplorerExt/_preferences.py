@@ -13,15 +13,32 @@ RECENT_FILES = "User parameter:BaseApp/Preferences/RecentFiles"
 
 
 def add_recent_file(path: str) -> None:
-    group = App.ParamGet(RECENT_FILES)
-    count = group.GetInt("RecentFiles", 0)
-    files = [path]
+    mod_recent_file(path)
 
-    for i in range(count):
-        if (file := group.GetString(f"MRU{i}", "")) and file != path:
+
+def remove_recent_file(path: str) -> None:
+    mod_recent_file(path, remove=True)
+
+
+def mod_recent_file(path: str, *, remove: bool = False) -> None:
+    group = App.ParamGet(RECENT_FILES)
+    names: list[str] = group.GetStrings("MRU")
+    files = [] if remove else [path]
+    for name in names:
+        if (file := group.GetString(name, "")) and file != path:
             files.append(file)
 
     for i, name in enumerate(files):
         group.SetString(f"MRU{i}", name)
 
-    group.SetInt("RecentFiles", len(files))
+    for name in names[i+1:]:
+        group.RemString(name)
+
+
+def get_recent_files() -> list[str]:
+    group = App.ParamGet(RECENT_FILES)
+    return [group.GetString(n, "") for n in group.GetStrings("MRU")]
+
+
+def get_recent_files_group():
+    return App.ParamGet(RECENT_FILES)

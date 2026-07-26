@@ -20,6 +20,7 @@ from ._qt import qtc, qtg, qtw, QtCompat
 from ._state import State
 from ._style import Icons
 from ._tree import FileTree
+from ._recent import RecentFilesWidget
 
 
 class FileExplorerWidget(qtw.QWidget):
@@ -33,6 +34,8 @@ class FileExplorerWidget(qtw.QWidget):
     favorites: FavoritesWidget
     status: qtw.QStatusBar
     read_only_toggle: qtw.QToolButton
+    content: qtw.QStackedWidget
+    recent: RecentFilesWidget
 
     def __init__(self, parent: qtw.QWidget | None = None) -> None:
         super().__init__(parent)
@@ -40,13 +43,24 @@ class FileExplorerWidget(qtw.QWidget):
         self.init_ui()
 
         self._state.passive_tree_root_changed.connect(
-            lambda path: self.status.showMessage(self.tree.root())
+            lambda _: self.show_tree(self.tree.root())
         )
+        self._state.request_show_tree.connect(
+            lambda: self.show_tree(self.tree.root())
+        )
+        self._state.request_recent_files.connect(self.show_recent)
 
         # Restore last location if available
         last_location = self._state.get_last_path()
         if last_location and Path(last_location).is_dir():
             self._state.request_root_change.emit(last_location)
+
+    def show_tree(self, msg: str) -> None:
+        self.status.showMessage(self.tree.root())
+        self.content.setCurrentIndex(0)
+
+    def show_recent(self) -> None:
+        self.content.setCurrentIndex(1)
 
     def build_sidebar(self) -> qtw.QWidget:
         container = qtw.QWidget()
@@ -126,13 +140,19 @@ class FileExplorerWidget(qtw.QWidget):
         self.tree = FileTree(self._state, self)
         self.preview = PreviewPanel(self._state, self)
         self.favorites = FavoritesWidget(self._state, self)
+        self.content = qtw.QStackedWidget()
+        self.recent = RecentFilesWidget(self._state, self)
         left_sidebar = self.build_sidebar()
         top_toolbar = self.build_top_toolbar()
         self.status = self.build_statusbar()
 
+        self.content.addWidget(self.tree)
+        self.content.addWidget(self.recent)
+        self.content.setCurrentIndex(0)
+
         splitter = qtw.QSplitter(QtCompat.Orientation.Horizontal)
         splitter.addWidget(left_sidebar)
-        splitter.addWidget(self.tree)
+        splitter.addWidget(self.content)
         splitter.setStretchFactor(0, 2)
         splitter.setStretchFactor(1, 8)
 

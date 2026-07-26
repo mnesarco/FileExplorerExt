@@ -31,6 +31,8 @@ class State(qtc.QObject):
     request_root_change: qtc.Signal = qtc.Signal(str)
     tree_root_changed: qtc.Signal = qtc.Signal(str)
     passive_tree_root_changed: qtc.Signal = qtc.Signal(str)
+    request_recent_files: qtc.Signal = qtc.Signal()
+    request_show_tree: qtc.Signal = qtc.Signal()
 
     _current_path: str
     _history: History

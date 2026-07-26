@@ -35,3 +35,4 @@ class Icons:
     Rename = customIcon("rename")
     Save = customIcon("save")
     PlayMacro = customIcon("play-macro")
+    RecentFiles = customIcon("recent-files")
