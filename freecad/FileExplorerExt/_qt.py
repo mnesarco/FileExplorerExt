@@ -61,6 +61,8 @@ if not IS_QT6_SUPPORTED:
         ListView_ResizeMode = qtw.QListView
         ListView_Movement = qtw.QListView
 
+        SortOrder = qtc.Qt
+
 
         class DockWidgetArea:
             names = {
@@ -147,6 +149,8 @@ if IS_QT6_SUPPORTED:
         ListView_Flow = qtw.QListView.Flow
         ListView_ResizeMode = qtw.QListView.ResizeMode
         ListView_Movement = qtw.QListView.Movement
+
+        SortOrder = qtc.Qt.SortOrder
 
         @staticmethod
         def get_event_pos(event: qtg.QMouseEvent | qtg.QDropEvent):

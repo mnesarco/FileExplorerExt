@@ -8,6 +8,7 @@ FileExplorerExt: File Tree.
 
 from __future__ import annotations
 
+from typing import cast
 from pathlib import Path
 
 import FreeCAD as App  # type: ignore
@@ -26,12 +27,28 @@ QDir = qtc.QDir
 
 
 class ExcludingFilterProxy(qtc.QSortFilterProxyModel):
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setDynamicSortFilter(False)
-        self.exclude_regex = qtc.QRegularExpression(r"^(?!.*\.(fcbak|fcstd1)$)", QtCompat.PatternOption.CaseInsensitiveOption)
+        self.exclude_regex = qtc.QRegularExpression(
+            r"^(?!.*\.(fcbak|fcstd1)$)",
+            QtCompat.PatternOption.CaseInsensitiveOption,
+        )
         self.setFilterRegularExpression(self.exclude_regex)
+
+    def lessThan(self, left_index, right_index):
+        model = cast(qtw.QFileSystemModel, self.sourceModel())
+        left_is_dir = model.isDir(left_index)
+        right_is_dir = model.isDir(right_index)
+
+        if left_is_dir != right_is_dir:
+            return (
+                left_is_dir
+                if self.sortOrder() == QtCompat.SortOrder.AscendingOrder
+                else right_is_dir
+            )
+
+        return super().lessThan(left_index, right_index)
 
 
 class FileTree(qtw.QTreeView):
@@ -79,7 +96,9 @@ class FileTree(qtw.QTreeView):
         return self._proxy.mapFromSource(self._model.setRootPath(path))
 
     def root_index(self) -> qtc.QModelIndex:
-        return self._proxy.mapFromSource(self._model.index(self._model.rootPath()))
+        return self._proxy.mapFromSource(
+            self._model.index(self._model.rootPath())
+        )
 
     def file_path(self, index: qtc.QModelIndex) -> str:
         return self._model.filePath(self._proxy.mapToSource(index))
@@ -180,7 +199,9 @@ class FileTree(qtw.QTreeView):
             for action in custom_actions:
                 QtCompat.addAction(
                     menu,
-                    action.icon if isinstance(action.icon, qtg.QIcon) else qtg.QIcon(action.icon), # type: ignore
+                    action.icon
+                    if isinstance(action.icon, qtg.QIcon)
+                    else qtg.QIcon(action.icon),  # type: ignore
                     action.text,
                     lambda act=action: act.activated(paths),
                 )
@@ -212,7 +233,9 @@ class FileTree(qtw.QTreeView):
                         doc.save()
                     else:
                         doc.saveAs(str(path / file.name))
-                        App.Console.PrintNotification(f"Saved to {doc.FileName}. Old version left at {file!s}\n")
+                        App.Console.PrintNotification(
+                            f"Saved to {doc.FileName}. Old version left at {file!s}\n"
+                        )
                     add_recent_file(str(path / file.name))
             else:
                 new_name, ok = qtw.QInputDialog.getText(
@@ -227,12 +250,17 @@ class FileTree(qtw.QTreeView):
                         new_name = f"{new_name}.FCStd"
                     dst = path / new_name
                     title = tr("FileExplorerExt", "Override confirmation:")
-                    prompt = tr("FileExplorerExt", "File {} already exists. Override?").format(str(dst))
-                    if dst.exists() and qtw.QMessageBox.question(self, title, prompt) != QtCompat.StandardButton.Yes:
+                    prompt = tr(
+                        "FileExplorerExt", "File {} already exists. Override?"
+                    ).format(str(dst))
+                    if (
+                        dst.exists()
+                        and qtw.QMessageBox.question(self, title, prompt)
+                        != QtCompat.StandardButton.Yes
+                    ):
                         return
                     doc.saveAs(str(path / new_name))
                     add_recent_file(str(path / new_name))
-
 
     def root(self) -> str:
         return self._model.rootPath()
