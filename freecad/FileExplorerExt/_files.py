@@ -8,18 +8,16 @@ FileExplorerExt: File utils.
 
 import re
 import shutil
-import types
 from pathlib import Path
+from typing import cast
 
-import FreeCAD as App  # type: ignore
-import FreeCADGui as Gui  # type: ignore
+import FreeCAD as App
 
-from ._qt import qtg
 from ._preferences import add_recent_file
-
+from ._qt import qtg
 
 SUPPORTED_IMAGE_FORMATS = set([
-    f".{str(f, 'utf-8')}".lower()
+    f".{str(f, 'utf-8')}".lower()  # ty:ignore[invalid-argument-type]
     for f in qtg.QImageReader.supportedImageFormats()
 ])
 
@@ -37,10 +35,15 @@ def is_fcstd_file(file_path: str) -> bool:
     return file_path.lower().endswith(".fcstd") and Path(file_path).exists()
 
 
-def get_import_module(path: str) -> types.ModuleType | None:
+def is_fclist_file(file_path: str) -> bool:
+    """Return True if file_path is a FCList file."""
+    return file_path.lower().endswith(".fclist") and Path(file_path).exists()
+
+
+def get_import_module(path: str) -> str | None:
     """Return the module to import path if any."""
     ext = (path.split(".")[-1] or "").lower()
-    modules = App.getImportType(ext)
+    modules = cast("list[str]", App.getImportType(ext))
     if modules:
         return modules[0]
     return None
@@ -57,7 +60,7 @@ def open_file(file_path: str) -> None:
             try:
                 from freecad import module_io  # type: ignore
             except ImportError:
-                Gui.insert(file_path)
+                App.Gui.insert(file_path)
             else:
                 module_io.OpenInsertObject(module, file_path, "open")
         else:
@@ -69,7 +72,7 @@ def import_file(file_path: str) -> None:
 
     doc_name = App.ActiveDocument.Name if App.ActiveDocument else None
     if ext == "fcstd":
-        Gui.insert(file_path, doc_name)
+        App.Gui.insert(file_path, doc_name)  # ty:ignore[invalid-argument-type] Bad FreeCAD stuff signature typings
         add_recent_file(file_path)
         return
 
@@ -78,7 +81,7 @@ def import_file(file_path: str) -> None:
         try:
             from freecad import module_io  # type: ignore
         except ImportError:
-            Gui.insert(file_path, doc_name)
+            App.Gui.insert(file_path, doc_name)  # ty:ignore[invalid-argument-type] Bad FreeCAD stuff signature typings
         else:
             module_io.OpenInsertObject(
                 module,

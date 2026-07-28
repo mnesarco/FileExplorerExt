@@ -36,3 +36,4 @@ class Icons:
     Save = customIcon("save")
     PlayMacro = customIcon("play-macro")
     RecentFiles = customIcon("recent-files")
+    FCList = customIcon("fclist")

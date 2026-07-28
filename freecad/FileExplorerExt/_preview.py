@@ -15,7 +15,7 @@ from pathlib import Path
 
 import FreeCAD as App
 
-from ._files import is_fcstd_file, is_image_file, open_file
+from ._files import is_fcstd_file, is_image_file, open_file, is_fclist_file
 from ._intl import tr
 from ._preferences import remove_recent_file
 from ._qt import QtCompat, qtc, qtg, qtw
@@ -99,9 +99,12 @@ class FilePreviewCard(qtw.QToolButton):
         self.setText(self.path.stem)
         self.setToolTip(path)
 
-        pixmap = get_fcstd_preview(path)
-        if pixmap and not pixmap.isNull():
-            self.setIcon(qtg.QIcon(pixmap))
+        if is_fcstd_file(path):
+            pixmap = get_fcstd_preview(path)
+            if pixmap and not pixmap.isNull():
+                self.setIcon(qtg.QIcon(pixmap))
+        elif is_fclist_file(path):
+            self.setIcon(Icons.FCList)
 
         icon_size = int(width * 0.95)
         self.setIconSize(qtc.QSize(icon_size, icon_size))
@@ -157,8 +160,8 @@ def scaled_pixmap(pixmap: qtg.QPixmap, width: int, height: int) -> qtg.QPixmap:
 
 def get_fcstd_preview(
     file_path: str | Path,
-    width: int = 64,
-    height: int = 64,
+    width: int = 256,
+    height: int = 256,
 ) -> qtg.QPixmap | None:
     """Load Thumbnail.png from a FreeCAD .FCStd file or cache if available."""
     if isinstance(file_path, str):

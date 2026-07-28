@@ -7,5 +7,8 @@ Advanced File Explorer FreeCAD Addon.
 """
 
 from ._api import API as API, _CustomFileAction as CustomFileAction
+from ._fclist import FCListImportHandler
+
+FCListImportHandler.install()
 
 __all__ = ("API", "CustomFileAction")

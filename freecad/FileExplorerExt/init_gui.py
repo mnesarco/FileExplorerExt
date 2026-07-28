@@ -5,6 +5,7 @@
 # ruff: noqa: E402 F401
 
 from ._qt import IS_QT6_SUPPORTED
+
 import FreeCAD as App
 
 if not IS_QT6_SUPPORTED:
@@ -17,9 +18,11 @@ from ._intl import install_translations
 install_translations()
 
 from ._explorer import show
-from ._commands import FEE_ToggleExplorer
+from ._commands import FEE_ToggleExplorer, FEE_SaveSession, WorkbenchManipulator
 from . import _actions
 
-cmd = FEE_ToggleExplorer()
-cmd.Install()
+FEE_ToggleExplorer.Install()
+FEE_SaveSession().Install()
+WorkbenchManipulator.install()
+
 show()
