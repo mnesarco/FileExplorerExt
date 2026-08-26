@@ -1,11 +1,158 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="svg1" class="bi bi-save2-fill" width="64" height="64" fill="currentColor" version="1.1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
- <defs id="defs1">
-  <linearGradient id="linearGradient4" x1="-3.6941" x2="22.143" y1="8.083" y2="7.751" gradientTransform="matrix(3.75,0,0,3.75,2,2)" gradientUnits="userSpaceOnUse">
-   <stop id="stop3" stop-color="#162d50" offset="0"/>
-   <stop id="stop5" stop-color="#87aade" offset=".40641"/>
-   <stop id="stop4" stop-color="#162d50" offset="1"/>
-  </linearGradient>
- </defs>
- <path id="path1" d="m33.875 7.625a5.625 5.625 0 0 1 5.625-5.625h15a7.5 7.5 0 0 1 7.5 7.5v45a7.5 7.5 0 0 1-7.5 7.5h-45a7.5 7.5 0 0 1-7.5-7.5v-45a7.5 7.5 0 0 1 7.5-7.5h22.5c-1.1775 1.5675-1.875 3.5138-1.875 5.625v22.5h-7.5a1.875 1.875 0 0 0-1.3275 3.2025l9.375 9.375a1.875 1.875 0 0 0 2.655 0l9.375-9.375a1.875 1.875 0 0 0-1.3275-3.2025h-7.5z" fill="url(#linearGradient4)"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64"
+   height="64"
+   id="svg2869"
+   version="1.1"
+   viewBox="0 0 64 64"
+   sodipodi:docname="save.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="6.424728"
+     inkscape:cx="10.194984"
+     inkscape:cy="45.682868"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2869" />
+  <defs
+     id="defs2871">
+    <linearGradient
+       id="linearGradient2">
+      <stop
+         style="stop-color:#ffd42a;stop-opacity:1"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#e6e6e6;stop-opacity:1"
+         offset="1"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient6">
+      <stop
+         style="stop-color:#8b7a00;stop-opacity:1;"
+         offset="0"
+         id="stop7" />
+      <stop
+         style="stop-color:#d3d7cf;stop-opacity:1"
+         offset="1"
+         id="stop8" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient2"
+       id="linearGradient8"
+       x1="11.761719"
+       y1="55"
+       x2="11.730469"
+       y2="9.0234375"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.0740741,0,0,1.0740741,-1.2962958,-2.3703713)" />
+    <linearGradient
+       xlink:href="#linearGradient6"
+       id="linearGradient16"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(5.0000011,-2)"
+       x1="11.761719"
+       y1="55"
+       x2="11.730469"
+       y2="9.0234375" />
+  </defs>
+  <metadata
+     id="metadata2874">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>[maxwxyz]</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:relation>https://www.freecad.org/wiki/index.php?title=Artwork</dc:relation>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>FreeCAD</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:identifier>FreeCAD/src/</dc:identifier>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>FreeCAD LGPL2+</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date>2024</dc:date>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path
+     id="path13"
+     d="m 44.500934,16.564371 4.934023,-0.0016 c 0.810729,0 1.467902,-0.579323 1.469987,-1.292839 l -0.0081,-8.6930703 c -0.0018,-0.7115604 -0.659133,-1.2897044 -1.47296,-1.2877152 l -4.928919,0.00161 c -0.813818,0 -1.472503,0.5787337 -1.472503,1.29034 l 0.0072,8.6951275 c 0.0018,0.713666 0.660269,1.290781 1.470919,1.288573"
+     style="fill:#2e3436;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.133333" />
+  <path
+     id="path14"
+     d="m 25.214144,29.835018 v 1.397568 H 55.971537 V 29.835018 H 25.214144"
+     style="fill:#2e3436;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.133333" />
+  <path
+     id="path15"
+     d="m 25.214144,34.025126 v 1.396316 H 55.971537 V 34.025126 H 25.214144"
+     style="fill:#2e3436;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.133333" />
+  <path
+     id="path16"
+     d="m 25.214144,38.215405 v 1.396316 H 55.971537 V 38.215405 H 25.214144"
+     style="fill:#2e3436;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.133333" />
+  <rect
+     style="fill:#729fcf;fill-rule:evenodd;stroke:#204a87;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     id="rect16"
+     width="28.609232"
+     height="5.8582039"
+     x="26.288223"
+     y="42.920334" />
+  <path
+     style="fill:#babdb6;fill-opacity:1;fill-rule:nonzero;stroke:#2e3436;stroke-width:1.99999;stroke-dasharray:none;stroke-opacity:1"
+     d="m 48.078507,2.9999999 c -1.091968,0.00179 -38.9258378,0.02533 -38.9258378,0.02533 -2.403376,0.00269 -4.3480957,1.9509225 -4.3480957,4.352706 l 0.032311,49.2747781 c 0,2.402795 1.9504213,4.3502 4.3527947,4.347183 l 45.6577268,-0.02811 c 2.402294,-8.96e-4 4.351614,-1.95017 4.348016,-4.353046 0,0 -0.02578,-42.493321 -0.02578,-43.080661 -0.0018,-0.947695 -0.228572,-1.728288 -0.840114,-2.336976 C 57.935765,10.809106 53.628188,6.5075611 51.414274,4.2936558 50.634938,3.5188586 49.169551,2.9999999 48.078507,2.9999999 Z"
+     id="path2" />
+  <path
+     style="fill:url(#linearGradient8);fill-opacity:1;fill-rule:nonzero;stroke:#d3d7cf;stroke-width:1.99999;stroke-dasharray:none;stroke-opacity:1"
+     d="m 57.020252,13.322971 -3.52e-4,-0.0034 c 0.005,7.068424 0.01368,23.472598 0.02784,43.304481 0.0018,1.202544 -0.997696,2.200144 -2.202691,2.200593 L 9.1885132,58.851857 C 7.98448,58.853361 6.9858232,57.856762 6.9858225,56.651264 L 6.9522577,7.3781089 c 0,-1.2055749 0.9962923,-2.2034407 2.2026907,-2.2047888 19.0208646,-0.012462 32.5843446,-0.01994 39.1181046,-0.02424 -0.0027,-2.933e-4 -0.0054,-5.813e-4 -0.0081,-8.638e-4 -0.182696,5.99e-5 -0.256864,4.41e-5 -0.18745,-7.01e-5 0.579576,0 1.505519,0.353566 1.818793,0.6650029 2.214675,2.2146651 6.517006,6.5103139 6.918549,6.9101569 0.03221,0.03206 0.204578,0.293979 0.205584,0.813947 0,0.03346 -7.9e-5,-0.04599 -2.21e-4,-0.214282 z"
+     id="path5" />
+  <path
+     style="fill:#eeeeec;fill-opacity:1;fill-rule:nonzero;stroke:#555753;stroke-width:1.99999;stroke-dasharray:none;stroke-opacity:1"
+     d="m 44.911676,7.2985211 0.0101,13.3044779 c 0,1.293579 -1.329669,2.531728 -2.622909,2.533742 l -18.905604,0.012 c -1.291656,0.0018 -2.502764,-1.235634 -2.502764,-2.529303 L 20.878434,7.3147127 Z"
+     id="path1" />
+  <path
+     style="fill:#eeeeec;fill-opacity:1;fill-rule:nonzero;stroke:#555753;stroke-width:1.99999;stroke-dasharray:none;stroke-opacity:1"
+     d="M 50.803035,56.678319 H 13.196867 v -2.894892 h 0.0045 V 34.121692 c 0,-1.563262 1.216219,-2.833902 2.717193,-2.833902 h 32.164503 c 1.500885,0 2.717015,1.27064 2.717015,2.833902 v 19.661735 h 0.0027 z"
+     id="path3" />
+  <path
+     id="path4"
+     d="m 35.908342,20.860667 4.934022,-0.0016 c 0.810729,0 1.467902,-0.579322 1.469988,-1.292838 l -0.0081,-8.693071 c -0.0018,-0.71156 -0.659134,-1.289704 -1.472961,-1.2877148 l -4.928919,0.00161 c -0.813818,0 -1.472503,0.5787338 -1.472503,1.2903398 l 0.0072,8.695127 c 0.0018,0.713667 0.660269,1.290782 1.470919,1.288574"
+     style="fill:#666666;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.133333" />
+  <path
+     style="fill:#999999;stroke-width:1.99999;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke"
+     d="M 21.318589,36.272947 H 42.215858 L 31.516457,52.489228 Z"
+     id="path6"
+     sodipodi:nodetypes="cccc" />
 </svg>
