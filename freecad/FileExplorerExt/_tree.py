@@ -86,6 +86,7 @@ class FileTree(qtw.QTreeView):
         self.setUniformRowHeights(True)
         self.setContextMenuPolicy(QtCompat.ContextMenuPolicy.CustomContextMenu)
         self.setSortingEnabled(True)
+        self.sortByColumn(0, QtCompat.SortOrder.AscendingOrder)
         self.activated.connect(self.on_activated)
         self.clicked.connect(self.on_activated)
         self.doubleClicked.connect(self.on_double_click)
