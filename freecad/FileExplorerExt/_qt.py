@@ -119,6 +119,14 @@ if not IS_QT6_SUPPORTED:
                 widget.addAction(action)
             return action
 
+        @staticmethod
+        def get_text(parent, title, label):
+            return qtw.QInputDialog.getText(parent, title, label)
+
+        @staticmethod
+        def message_box(parent, title, text):
+            qtw.QMessageBox.warning(parent, title, text)
+
 
 if IS_QT6_SUPPORTED:
 
@@ -177,6 +185,14 @@ if IS_QT6_SUPPORTED:
             call: Callable | None = None,
         ) -> qtg.QAction:
             return widget.addAction(icon or qtg.QIcon(), text or "", call)
+
+        @staticmethod
+        def get_text(parent, title, label):
+            return qtw.QInputDialog.getText(parent, title, label)
+
+        @staticmethod
+        def message_box(parent, title, text):
+            qtw.QMessageBox.warning(parent, title, text)
 
         @staticmethod
         def dock_area_name(value: qtc.Qt.DockWidgetArea):

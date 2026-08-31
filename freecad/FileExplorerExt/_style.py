@@ -34,6 +34,7 @@ class Icons:
     Trash = customIcon("trash")
     Rename = customIcon("rename")
     Save = customIcon("save")
+    NewFolder = customIcon("new-folder")
     PlayMacro = customIcon("play-macro")
     RecentFiles = customIcon("recent-files")
     FCList = customIcon("fclist")

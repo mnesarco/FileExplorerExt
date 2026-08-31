@@ -100,6 +100,12 @@ class FileExplorerWidget(qtw.QWidget):
             tr("FileExplorerExt", "Save here"),
             self.tree.save_here,
         )
+        QtCompat.addAction(
+            toolbar,
+            Icons.NewFolder,
+            tr("FileExplorerExt", "Create Folder"),
+            self._create_folder,
+        )
 
         filter_input = qtw.QLineEdit(self)
         filter_input.setPlaceholderText(tr("FileExplorerExt", "Filter..."))
@@ -164,6 +170,39 @@ class FileExplorerWidget(qtw.QWidget):
 
     def on_filter_changed(self, text: str):
         self.tree.setNameFilter(text)
+
+    def _create_folder(self) -> None:
+        parent = self.tree.root()
+        name, ok = QtCompat.get_text(
+            self,
+            tr("FileExplorerExt", "Create Folder"),
+            tr("FileExplorerExt", "Folder name in:") + f"\n{parent}",
+        )
+        name = name.strip()
+        if not ok or not name:
+            return
+        if Path(name).name != name or "/" in name or "\\" in name or name in (".", ".."):
+            QtCompat.message_box(
+                self,
+                tr("FileExplorerExt", "Create Folder"),
+                tr("FileExplorerExt", "Enter a single folder name without path separators."),
+            )
+            return
+        path = Path(parent) / name
+        try:
+            path.mkdir(exist_ok=False)
+        except FileExistsError:
+            QtCompat.message_box(
+                self,
+                tr("FileExplorerExt", "Create Folder"),
+                tr("FileExplorerExt", "A file or folder with that name already exists."),
+            )
+        except OSError as e:
+            QtCompat.message_box(
+                self,
+                tr("FileExplorerExt", "Create Folder"),
+                str(e),
+            )
 
 
 class FileExplorerDockWidget(qtw.QDockWidget):
