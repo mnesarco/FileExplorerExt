@@ -31,6 +31,7 @@ class State(qtc.QObject):
     request_root_change: qtc.Signal = qtc.Signal(str)
     tree_root_changed: qtc.Signal = qtc.Signal(str)
     passive_tree_root_changed: qtc.Signal = qtc.Signal(str)
+    preview_enabled_changed: qtc.Signal = qtc.Signal(bool)
     request_recent_files: qtc.Signal = qtc.Signal()
     request_show_tree: qtc.Signal = qtc.Signal()
 
@@ -133,4 +134,13 @@ class State(qtc.QObject):
     def save_dock_area(self, area: QtCompat.DockWidgetArea) -> None:
         s_data = self._get_config()
         s_data["dockArea"] = QtCompat.dock_area_name(area)
+        self._save_config(s_data)
+
+    def get_preview_enabled(self) -> bool:
+        config = self._get_config()
+        return bool(config.get("preview_enabled", True))
+
+    def save_preview_enabled(self, enabled: bool) -> None:
+        s_data = self._get_config()
+        s_data["preview_enabled"] = enabled
         self._save_config(s_data)

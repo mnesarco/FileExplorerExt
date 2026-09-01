@@ -38,3 +38,5 @@ class Icons:
     PlayMacro = customIcon("play-macro")
     RecentFiles = customIcon("recent-files")
     FCList = customIcon("fclist")
+    Preview = customIcon("eye")
+    PreviewOff = customIcon("eye-off")

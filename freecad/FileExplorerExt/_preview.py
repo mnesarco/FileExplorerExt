@@ -29,16 +29,25 @@ class PreviewPanel(qtw.QLabel):
     """
 
     _state: State
+    _enabled: bool = True
+    _last_path: str = ""
 
     def __init__(self, state: State, parent: qtw.QWidget | None = None) -> None:
         super().__init__(parent)
         self.setObjectName("FileExplorerExt_Preview")
         self._state = state
+        self._enabled = state.get_preview_enabled()
         self.init_ui()
         state.path_changed.connect(self.on_state_path_changed)
-        state.passive_tree_root_changed.connect(lambda: self.setVisible(False))
+        state.passive_tree_root_changed.connect(self._on_root_changed)
+        state.preview_enabled_changed.connect(self.set_enabled)
+
+    def _on_root_changed(self, _path: str) -> None:
+        self._last_path = ""
+        self.setVisible(False)
 
     def on_state_path_changed(self, path: str) -> None:
+        self._last_path = path
         self.update_preview(path)
 
     def init_ui(self) -> None:
@@ -48,6 +57,8 @@ class PreviewPanel(qtw.QLabel):
 
     def update_preview(self, file_path: str) -> None:
         self.setVisible(False)
+        if not self._enabled:
+            return
 
         info = qtc.QFileInfo(file_path)
         if not info.exists() or info.isDir():  # type: ignore
@@ -74,6 +85,13 @@ class PreviewPanel(qtw.QLabel):
         """Display image preview."""
         self.setPixmap(pixmap)
         self.setVisible(True)
+
+    def set_enabled(self, enabled: bool) -> None:
+        self._enabled = enabled
+        if enabled:
+            self.update_preview(self._last_path)
+        else:
+            self.setVisible(False)
 
 
 class FilePreviewCard(qtw.QToolButton):

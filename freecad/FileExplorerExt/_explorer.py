@@ -117,6 +117,17 @@ class FileExplorerWidget(qtw.QWidget):
     def build_statusbar(self) -> qtw.QStatusBar:
         status = qtw.QStatusBar(self)
         status.setSizeGripEnabled(False)
+        preview_toggle = qtw.QToolButton()
+        preview_toggle.setCheckable(True)
+        preview_toggle.setToolButtonStyle(
+            QtCompat.ToolButtonStyle.ToolButtonIconOnly
+        )
+        preview_toggle.setFocusPolicy(QtCompat.FocusPolicy.NoFocus)
+        preview_toggle.setIconSize(qtc.QSize(16, 16))
+        preview_toggle.toggled.connect(self.on_toggle_preview)
+        status.addPermanentWidget(preview_toggle)
+        self.preview_toggle = preview_toggle
+        preview_toggle.setChecked(self._state.get_preview_enabled())
         read_only_toggle = qtw.QToolButton()
         read_only_toggle.setCheckable(True)
         read_only_toggle.setToolButtonStyle(
@@ -129,6 +140,17 @@ class FileExplorerWidget(qtw.QWidget):
         self.read_only_toggle = read_only_toggle
         read_only_toggle.toggle()
         return status
+
+    def on_toggle_preview(self, enabled: bool) -> None:
+        toggle = self.preview_toggle
+        toggle.setIcon(Icons.Preview if enabled else Icons.PreviewOff)
+        toggle.setToolTip(
+            tr("FileExplorerExt", "Preview enabled")
+            if enabled
+            else tr("FileExplorerExt", "Preview disabled")
+        )
+        self._state.save_preview_enabled(enabled)
+        self._state.preview_enabled_changed.emit(enabled)
 
     def on_toggle_readonly(self, ro: bool) -> None:
         toggle = self.read_only_toggle
