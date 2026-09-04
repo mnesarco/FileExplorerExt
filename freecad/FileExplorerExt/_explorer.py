@@ -65,8 +65,8 @@ class FileExplorerWidget(qtw.QWidget):
     def build_sidebar(self) -> qtw.QWidget:
         container = qtw.QWidget()
         layout = qtw.QVBoxLayout(container)
-        layout.addWidget(self.favorites)
-        layout.addWidget(self.preview)
+        layout.addWidget(self.favorites, stretch=1)
+        layout.addWidget(self.preview, stretch=0, alignment=QtCompat.AlignmentFlag.AlignBottom)
         layout.setContentsMargins(0, 0, 0, 0)
         return container
 

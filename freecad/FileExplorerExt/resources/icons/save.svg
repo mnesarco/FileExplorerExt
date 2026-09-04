@@ -9,32 +9,36 @@
    inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs2">
-    <linearGradient
-       id="linearGradient1"
-       inkscape:collect="always">
-      <stop
-         style="stop-color:#999999;stop-opacity:1"
-         offset="0"
-         id="stop1" />
-      <stop
-         style="stop-color:#e6e6e6;stop-opacity:1"
-         offset="1"
-         id="stop2" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient1"
-       id="linearGradient2"
-       x1="35.387299"
-       y1="52.124535"
-       x2="35.387299"
-       y2="45.270237"
-       gradientUnits="userSpaceOnUse" />
+    <symbol
+       id="AigaSymbols.svg:RightAndDownArrow_Inv">
+      <title
+         id="title287">Right and Down Arrow</title>
+      <rect
+         x="0.5"
+         y="0.5"
+         width="71"
+         height="71"
+         ry="6"
+         style="stroke:#ffffff"
+         id="rect287" />
+      <path
+         d="M 56,56 H 24 L 13,45 H 37 L 14,22 22,14 45,37 V 13 l 11,11 z"
+         style="fill:#ffffff;stroke:none"
+         id="path287" />
+    </symbol>
+    <symbol
+       id="AigaSymbols.svg:RightAndDownArrow">
+      <title
+         id="title286">Right and Down Arrow</title>
+      <path
+         d="M 56,56 H 24 L 13,45 H 37 L 14,22 22,14 45,37 V 13 l 11,11 z"
+         style="stroke:none"
+         id="path286" />
+    </symbol>
   </defs>
   <sodipodi:namedview
      id="namedview2"
@@ -45,12 +49,12 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.55449878"
-     inkscape:cx="385.03241"
-     inkscape:cy="-65.825213"
+     inkscape:zoom="3.1367188"
+     inkscape:cx="42.560398"
+     inkscape:cy="47.66127"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
-     inkscape:window-x="0"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
@@ -68,32 +72,8 @@
      stroke-width="2"
      stroke-linejoin="round"
      id="path2" />
-  <rect
-     x="16.169365"
-     y="32.652554"
-     width="34.729763"
-     height="20"
-     rx="4.3412204"
-     fill="#eeeeec"
-     stroke="#555753"
-     stroke-width="2"
-     id="rect2"
-     style="fill:url(#linearGradient2);fill-opacity:1" />
   <path
-     sodipodi:type="star"
-     style="fill:#204a87;fill-opacity:1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke"
-     id="path3"
-     inkscape:flatsided="true"
-     sodipodi:sides="3"
-     sodipodi:cx="27.735991"
-     sodipodi:cy="42.161892"
-     sodipodi:r1="8.3122578"
-     sodipodi:r2="4.1561289"
-     sodipodi:arg1="0.52359878"
-     sodipodi:arg2="1.5707963"
-     inkscape:rounded="0.04"
-     inkscape:randomized="0"
-     d="m 34.934617,46.318021 c -0.287945,0.498735 -14.109308,0.498735 -14.397253,0 -0.287945,-0.498736 6.622736,-12.468387 7.198627,-12.468387 0.57589,0 7.486571,11.969651 7.198626,12.468387 z"
-     inkscape:transform-center-y="1.8910388"
-     transform="matrix(1,0,0,-1,4.8617684,83.048566)" />
+     style="fill:#ffffff;stroke:#555753;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+     d="m 17.883504,29.011309 5.508877,-5.508877 15.83802,15.83802 V 22.813823 l 7.574705,7.574705 V 52.424034 H 24.769601 l -7.574707,-7.574705 h 16.526631 z"
+     id="path3" />
 </svg>

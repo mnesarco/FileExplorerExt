@@ -23,7 +23,7 @@ from ._state import State
 from ._style import Icons
 
 
-class PreviewPanel(qtw.QLabel):
+class PreviewPanel(qtw.QWidget):
     """
     Preview Widget.
     """
@@ -31,6 +31,7 @@ class PreviewPanel(qtw.QLabel):
     _state: State
     _enabled: bool = True
     _last_path: str = ""
+    _current_pixmap: qtg.QPixmap | None = None
 
     def __init__(self, state: State, parent: qtw.QWidget | None = None) -> None:
         super().__init__(parent)
@@ -51,12 +52,14 @@ class PreviewPanel(qtw.QLabel):
         self.update_preview(path)
 
     def init_ui(self) -> None:
-        self.setAlignment(QtCompat.AlignmentFlag.AlignCenter)
+        self.setMinimumHeight(120)
+        self.setMaximumHeight(256)
+        self.setSizePolicy(QtCompat.SizePolicy.Expanding, QtCompat.SizePolicy.Expanding)
         self.setVisible(False)
-        self.setStyleSheet("QLabel { background-color: white; }")
 
     def update_preview(self, file_path: str) -> None:
         self.setVisible(False)
+        self._current_pixmap = None
         if not self._enabled:
             return
 
@@ -64,27 +67,41 @@ class PreviewPanel(qtw.QLabel):
         if not info.exists() or info.isDir():  # type: ignore
             return
 
-        size = max(self.width() - 24, 150)
-
         if is_image_file(info.absoluteFilePath()):
             pixmap = qtg.QPixmap(info.absoluteFilePath())
             if not pixmap.isNull():
-                self.show_image_preview(scaled_pixmap(pixmap, size, size))
+                self.show_image_preview(pixmap)
                 return
 
         if is_fcstd_file(info.absoluteFilePath()):
-            size = max(self.width() - 24, 150)
-            pixmap = get_fcstd_preview(
-                info.absoluteFilePath(), width=size, height=size
-            )
+            pixmap = get_fcstd_preview(info.absoluteFilePath())
             if pixmap and not pixmap.isNull():
                 self.show_image_preview(pixmap)
                 return
 
     def show_image_preview(self, pixmap: qtg.QPixmap) -> None:
         """Display image preview."""
-        self.setPixmap(pixmap)
+        self._current_pixmap = pixmap
         self.setVisible(True)
+        self.update()
+
+    def paintEvent(self, event: qtg.QPaintEvent) -> None:  # type: ignore[override]
+        painter = qtg.QPainter(self)
+        painter.fillRect(self.rect(), qtg.QColor("white"))
+        if self._current_pixmap is not None:
+            scaled = self._current_pixmap.scaled(
+                self.size(),
+                QtCompat.AspectRatioMode.KeepAspectRatio,
+                QtCompat.TransformationMode.SmoothTransformation,
+            )
+            painter.drawPixmap(
+                (self.width() - scaled.width()) // 2,
+                (self.height() - scaled.height()) // 2,
+                scaled,
+            )
+        painter.setPen(qtg.QPen(qtg.QColor("black")))
+        painter.drawRect(self.rect().adjusted(0, 0, -1, -1))
+        painter.end()
 
     def set_enabled(self, enabled: bool) -> None:
         self._enabled = enabled
@@ -110,9 +127,7 @@ class FilePreviewCard(qtw.QToolButton):
     ):
         super().__init__(parent)
 
-        self.setToolButtonStyle(
-            QtCompat.ToolButtonStyle.ToolButtonTextUnderIcon
-        )
+        self.setToolButtonStyle(QtCompat.ToolButtonStyle.ToolButtonTextUnderIcon)
         self.path = Path(path)
         self.setText(self.path.stem)
         self.setToolTip(path)
@@ -190,9 +205,7 @@ def get_fcstd_preview(
     if not file_path.exists() or not file_path.is_file():
         return None
 
-    path_hash = hashlib.sha256(
-        str(file_path.resolve()).encode("utf-8")
-    ).hexdigest()
+    path_hash = hashlib.sha256(str(file_path.resolve()).encode("utf-8")).hexdigest()
     cache = get_cache_directory() / f".{path_hash}.png"
     if cache.exists() and cache.stat().st_ctime > file_path.stat().st_ctime:
         return qtg.QPixmap(str(cache))

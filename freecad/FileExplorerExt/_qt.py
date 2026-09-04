@@ -55,6 +55,7 @@ if not IS_QT6_SUPPORTED:
         PatternOption = qtc.QRegularExpression
         StandardButton = qtw.QMessageBox
         ItemDataRole = qtc.Qt
+        SizePolicy = qtw.QSizePolicy
 
         ListView_ViewMode = qtw.QListView
         ListView_Flow = qtw.QListView
@@ -62,7 +63,6 @@ if not IS_QT6_SUPPORTED:
         ListView_Movement = qtw.QListView
 
         SortOrder = qtc.Qt
-
 
         class DockWidgetArea:
             names = {
@@ -152,6 +152,7 @@ if IS_QT6_SUPPORTED:
         PatternOption = qtc.QRegularExpression.PatternOption
         StandardButton = qtw.QMessageBox.StandardButton
         ItemDataRole = qtc.Qt.ItemDataRole
+        SizePolicy = qtw.QSizePolicy.Policy
 
         ListView_ViewMode = qtw.QListView.ViewMode
         ListView_Flow = qtw.QListView.Flow
@@ -173,9 +174,7 @@ if IS_QT6_SUPPORTED:
         @staticmethod
         def set_file_system_options(model: qtw.QFileSystemModel):
             """Set QFileSystemModel options."""
-            model.setOptions(
-                qtw.QFileSystemModel.Option.DontUseCustomDirectoryIcons
-            )
+            model.setOptions(qtw.QFileSystemModel.Option.DontUseCustomDirectoryIcons)
 
         @staticmethod
         def addAction(
@@ -197,7 +196,5 @@ if IS_QT6_SUPPORTED:
         @staticmethod
         def dock_area_name(value: qtc.Qt.DockWidgetArea):
             return (
-                value.name
-                if value is not None
-                else qtc.Qt.DockWidgetArea.LeftDockWidgetArea.name
+                value.name if value is not None else qtc.Qt.DockWidgetArea.LeftDockWidgetArea.name
             )
