@@ -16,7 +16,7 @@ import os
 
 import FreeCAD as App  # type: ignore
 
-from ._files import duplicate_file, import_file, open_file
+from ._files import delete_path, duplicate_file, import_file, open_file
 from ._history import History
 from ._intl import tr
 from ._qt import qtc, qtg, QtCompat
@@ -45,9 +45,7 @@ class State(qtc.QObject):
         self._current_path = str(config.get("default_path", Path.home()))
         self._history = History()
         self._navigating = False
-        self.passive_tree_root_changed.connect(
-            self.on_passive_tree_root_changed
-        )
+        self.passive_tree_root_changed.connect(self.on_passive_tree_root_changed)
 
     def get_last_path(self) -> str:
         return self._current_path or str(Path.home())
@@ -65,22 +63,25 @@ class State(qtc.QObject):
         try:
             import_file(path)
         except Exception:
-            msg = tr("FileExplorerExt", "File {} could not be imported").format(
-                path
-            )
+            msg = tr("FileExplorerExt", "File {} could not be imported").format(path)
             App.Console.PrintUserWarning(f"{msg}\n")
 
     def open_file(self, path: str) -> None:
         try:
             open_file(path)
         except Exception:
-            msg = tr("FileExplorerExt", "File {} could not be opened").format(
-                path
-            )
+            msg = tr("FileExplorerExt", "File {} could not be opened").format(path)
             App.Console.PrintUserWarning(f"{msg}\n")
 
     def duplicate_file(self, path: str) -> None:
         duplicate_file(path)
+
+    def delete_path(self, path: str) -> None:
+        try:
+            delete_path(path)
+        except Exception:
+            msg = tr("FileExplorerExt", "Could not delete {}").format(path)
+            App.Console.PrintUserWarning(f"{msg}\n")
 
     def on_passive_tree_root_changed(self, path: str) -> None:
         if not self._navigating:

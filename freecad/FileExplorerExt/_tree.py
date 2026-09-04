@@ -97,9 +97,7 @@ class FileTree(qtw.QTreeView):
         return self._proxy.mapFromSource(self._model.setRootPath(path))
 
     def root_index(self) -> qtc.QModelIndex:
-        return self._proxy.mapFromSource(
-            self._model.index(self._model.rootPath())
-        )
+        return self._proxy.mapFromSource(self._model.index(self._model.rootPath()))
 
     def file_path(self, index: qtc.QModelIndex) -> str:
         return self._model.filePath(self._proxy.mapToSource(index))
@@ -194,15 +192,20 @@ class FileTree(qtw.QTreeView):
                 lambda: self._state.duplicate_file(file_path),
             )
 
+        QtCompat.addAction(
+            menu,
+            Icons.Trash,
+            tr("FileExplorerExt", "Delete"),
+            lambda: self.confirm_delete(file_path),
+        )
+
         paths = [Path(file_path)]
         custom_actions = API.get_custom_actions(paths)
         if custom_actions:
             for action in custom_actions:
                 QtCompat.addAction(
                     menu,
-                    action.icon
-                    if isinstance(action.icon, qtg.QIcon)
-                    else qtg.QIcon(action.icon),  # type: ignore
+                    action.icon if isinstance(action.icon, qtg.QIcon) else qtg.QIcon(action.icon),  # type: ignore
                     action.text,
                     lambda act=action: act.activated(paths),
                 )
@@ -212,6 +215,34 @@ class FileTree(qtw.QTreeView):
     def copy_path_to_clipboard(self, path: str) -> None:
         clipboard = qtg.QGuiApplication.clipboard()
         clipboard.setText(path)
+
+    def confirm_delete(self, file_path: str) -> None:
+        path = Path(file_path)
+        name = path.name
+        if path.is_dir():
+            prompt = tr(
+                "FileExplorerExt",
+                "PERMANENTLY DELETE directory '{}' and ALL its contents?\n\nThis cannot be undone!",
+            ).format(name)
+        else:
+            prompt = tr(
+                "FileExplorerExt",
+                "PERMANENTLY DELETE file '{}'?\n\nThis cannot be undone!",
+            ).format(name)
+
+        title = tr("FileExplorerExt", "Confirm Delete")
+        if (
+            qtw.QMessageBox.warning(
+                self,
+                title,
+                prompt,
+                QtCompat.StandardButton.Yes | QtCompat.StandardButton.No,
+                QtCompat.StandardButton.No,
+            )
+            == QtCompat.StandardButton.Yes
+            and path.exists()
+        ):
+            self._state.delete_path(file_path)
 
     def go_up(self) -> None:
         path = Path(self._model.rootPath())
@@ -251,9 +282,9 @@ class FileTree(qtw.QTreeView):
                         new_name = f"{new_name}.FCStd"
                     dst = path / new_name
                     title = tr("FileExplorerExt", "Override confirmation:")
-                    prompt = tr(
-                        "FileExplorerExt", "File {} already exists. Override?"
-                    ).format(str(dst))
+                    prompt = tr("FileExplorerExt", "File {} already exists. Override?").format(
+                        str(dst)
+                    )
                     if (
                         dst.exists()
                         and qtw.QMessageBox.question(self, title, prompt)
@@ -278,9 +309,7 @@ class FileTree(qtw.QTreeView):
     def setReadOnly(self, ro: bool) -> None:
         self._model.setReadOnly(ro)
         self.setDragDropMode(
-            QtCompat.DragDropMode.DragOnly
-            if ro
-            else QtCompat.DragDropMode.DragDrop
+            QtCompat.DragDropMode.DragOnly if ro else QtCompat.DragDropMode.DragDrop
         )
         self.setDragEnabled(True)
         self.setDefaultDropAction(QtCompat.DropAction.MoveAction)

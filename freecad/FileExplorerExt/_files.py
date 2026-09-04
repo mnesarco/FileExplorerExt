@@ -16,18 +16,18 @@ import FreeCAD as App
 from ._preferences import add_recent_file
 from ._qt import qtg
 
-SUPPORTED_IMAGE_FORMATS = set([
-    f".{str(f, 'utf-8')}".lower()  # ty:ignore[invalid-argument-type]
-    for f in qtg.QImageReader.supportedImageFormats()
-])
+SUPPORTED_IMAGE_FORMATS = set(
+    [
+        f".{str(f, 'utf-8')}".lower()  # ty:ignore[invalid-argument-type]
+        for f in qtg.QImageReader.supportedImageFormats()
+    ]
+)
 
 
 def is_image_file(file_path: str) -> bool:
     """Return True if Qt can read the image format."""
     path = Path(file_path)
-    return (
-        (path.suffix or "").lower() in SUPPORTED_IMAGE_FORMATS
-    ) and path.exists()
+    return ((path.suffix or "").lower() in SUPPORTED_IMAGE_FORMATS) and path.exists()
 
 
 def is_fcstd_file(file_path: str) -> bool:
@@ -112,3 +112,11 @@ def duplicate_file(file: str) -> None:
         num += 1
         copy = path.parent / f"{base}{num}{ext}"
     shutil.copy2(str(path), str(copy))
+
+
+def delete_path(file_path: str) -> None:
+    path = Path(file_path)
+    if path.is_dir():
+        shutil.rmtree(path)
+    else:
+        path.unlink()
