@@ -1,38 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="64"
-   height="64"
-   viewBox="0 0 64 64"
-   fill="#9aa0a6"
-   version="1.1"
-   id="svg1"
-   sodipodi:docname="eye-off.svg"
-   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs1" />
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="18.515625"
-     inkscape:cx="32"
-     inkscape:cy="32"
-     inkscape:window-width="3440"
-     inkscape:window-height="1376"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg1" />
-  <path
-     id="path1"
-     d="M 48 14 A 2 2 0 0 0 46.585938 14.585938 L 40.820312 20.351562 C 38.109394 18.948828 35.122786 18 32 18 C 20 18 10 32 10 32 C 10 32 13.864121 37.408187 19.669922 41.501953 L 14.585938 46.585938 A 2 2 0 0 0 14.585938 49.414062 A 2 2 0 0 0 17.414062 49.414062 L 23.179688 43.648438 C 25.890606 45.051172 28.877213 46 32 46 C 44 46 54 32 54 32 C 54 32 50.13588 26.591813 44.330078 22.498047 L 49.414062 17.414062 A 2 2 0 0 0 49.414062 14.585938 A 2 2 0 0 0 48 14 z M 32 22 A 10 10 0 0 1 37.513672 23.658203 L 34.585938 26.585938 A 6 6 0 0 0 32 26 A 6 6 0 0 0 26.585938 34.585938 L 23.658203 37.513672 A 10 10 0 0 1 32 22 z M 40.341797 26.486328 A 10 10 0 0 1 32 42 A 10 10 0 0 1 26.486328 40.341797 L 29.414062 37.414062 A 6 6 0 0 0 32 38 A 6 6 0 0 0 37.414062 29.414062 L 40.341797 26.486328 z " />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="svg1" width="64" height="64" fill="#9aa0a6" version="1.1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+ <path id="path1" d="m48 14a2 2 0 0 0-1.4141 0.58594l-5.7656 5.7656c-2.7109-1.4027-5.6975-2.3516-8.8203-2.3516-12 0-22 14-22 14s3.8641 5.4082 9.6699 9.502l-5.084 5.084a2 2 0 0 0 0 2.8281 2 2 0 0 0 2.8281 0l5.7656-5.7656c2.7109 1.4027 5.6975 2.3516 8.8203 2.3516 12 0 22-14 22-14s-3.8641-5.4082-9.6699-9.502l5.084-5.084a2 2 0 0 0 0-2.8281 2 2 0 0 0-1.4141-0.58594zm-16 8a10 10 0 0 1 5.5137 1.6582l-2.9277 2.9277a6 6 0 0 0-2.5859-0.58594 6 6 0 0 0-5.4141 8.5859l-2.9277 2.9277a10 10 0 0 1 8.3418-15.514zm8.3418 4.4863a10 10 0 0 1-8.3418 15.514 10 10 0 0 1-5.5137-1.6582l2.9277-2.9277a6 6 0 0 0 2.5859 0.58594 6 6 0 0 0 5.4141-8.5859l2.9277-2.9277z"/>
 </svg>
