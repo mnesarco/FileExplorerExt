@@ -56,6 +56,15 @@ if not IS_QT6_SUPPORTED:
         StandardButton = qtw.QMessageBox
         ItemDataRole = qtc.Qt
         SizePolicy = qtw.QSizePolicy
+        EditTrigger = qtw.QAbstractItemView
+        ShortcutContext = qtc.Qt
+        PaletteColorRole = qtg.QPalette
+        ScrollBarPolicy = qtc.Qt
+        TextElideMode = qtc.Qt
+        WidgetAttribute = qtc.Qt
+        MessageBoxIcon = qtw.QMessageBox
+        Key_Return = qtc.Qt.Key_Return
+        Key_Enter = qtc.Qt.Key_Enter
 
         ListView_ViewMode = qtw.QListView
         ListView_Flow = qtw.QListView
@@ -153,6 +162,15 @@ if IS_QT6_SUPPORTED:
         StandardButton = qtw.QMessageBox.StandardButton
         ItemDataRole = qtc.Qt.ItemDataRole
         SizePolicy = qtw.QSizePolicy.Policy
+        EditTrigger = qtw.QAbstractItemView.EditTrigger
+        ShortcutContext = qtc.Qt.ShortcutContext
+        PaletteColorRole = qtg.QPalette.ColorRole
+        ScrollBarPolicy = qtc.Qt.ScrollBarPolicy
+        TextElideMode = qtc.Qt.TextElideMode
+        WidgetAttribute = qtc.Qt.WidgetAttribute
+        MessageBoxIcon = qtw.QMessageBox.Icon
+        Key_Return = qtc.Qt.Key.Key_Return
+        Key_Enter = qtc.Qt.Key.Key_Enter
 
         ListView_ViewMode = qtw.QListView.ViewMode
         ListView_Flow = qtw.QListView.Flow

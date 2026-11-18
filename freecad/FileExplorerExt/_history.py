@@ -6,6 +6,7 @@
 FileExplorerExt: Navigation history.
 """
 
+
 class History:
     back: list[str]
     forward: list[str]

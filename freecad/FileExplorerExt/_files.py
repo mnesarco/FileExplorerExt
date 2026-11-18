@@ -6,15 +6,18 @@
 FileExplorerExt: File utils.
 """
 
+import os
 import re
 import shutil
+import subprocess
+import sys
 from pathlib import Path
 from typing import cast
 
 import FreeCAD as App
 
 from ._preferences import add_recent_file
-from ._qt import qtg
+from ._qt import qtc, qtg
 
 SUPPORTED_IMAGE_FORMATS = set(
     [
@@ -114,9 +117,75 @@ def duplicate_file(file: str) -> None:
     shutil.copy2(str(path), str(copy))
 
 
+def open_document_paths() -> list[Path]:
+    """Files of all currently open documents (unsaved documents have none)."""
+    paths: list[Path] = []
+    for doc in App.listDocuments().values():
+        filename = getattr(doc, "FileName", "")
+        if filename:
+            paths.append(Path(filename))
+    return paths
+
+
+def path_touches_open_document(path: str | Path) -> bool:
+    """True if path is an open document's file or a directory containing one."""
+    target = Path(path)
+    for doc_path in open_document_paths():
+        if doc_path == target:
+            return True
+        try:
+            doc_path.relative_to(target)
+        except ValueError:
+            continue
+        return True
+    return False
+
+
+def show_in_folder(path: str) -> None:
+    """Reveal a file in the platform file manager when it is supported."""
+    target = Path(path)
+    if sys.platform == "win32":
+        subprocess.Popen(["explorer", f"/select,{target}"])
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", "-R", str(target)])
+    else:
+        folder = target if target.is_dir() else target.parent
+        qtg.QDesktopServices.openUrl(qtc.QUrl.fromLocalFile(str(folder)))
+
+
+def open_terminal(path: str) -> None:
+    """Open a terminal in path. Raises OSError when no terminal is available."""
+    target = str(Path(path))
+    if sys.platform == "win32":
+        subprocess.Popen(["cmd", "/K", f'cd /d "{target}"'])
+        return
+    if sys.platform == "darwin":
+        subprocess.Popen(["open", "-a", "Terminal", target])
+        return
+
+    for name in (
+        "x-terminal-emulator",
+        "gnome-terminal",
+        "konsole",
+        "xfce4-terminal",
+        "xterm",
+    ):
+        if exe := shutil.which(name):
+            subprocess.Popen([exe], cwd=target)
+            return
+    msg = "No terminal emulator found"
+    raise OSError(msg)
+
+
 def delete_path(file_path: str) -> None:
     path = Path(file_path)
-    if path.is_dir():
-        shutil.rmtree(path)
-    else:
+    if path.is_symlink():
+        # Never rmtree() through a symlink: it would delete the target's contents.
         path.unlink()
+    elif path.is_dir():
+        shutil.rmtree(path)
+    elif os.path.lexists(path):
+        path.unlink()
+    else:
+        msg = f"{file_path} does not exist"
+        raise FileNotFoundError(msg)

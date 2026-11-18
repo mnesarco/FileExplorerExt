@@ -17,7 +17,7 @@ from ._intl import install_translations
 
 install_translations()
 
-from ._explorer import show
+from ._explorer import show_on_startup
 from ._commands import FEE_ToggleExplorer, FEE_SaveSession, WorkbenchManipulator
 from . import _actions
 
@@ -25,4 +25,4 @@ FEE_ToggleExplorer.Install()
 FEE_SaveSession().Install()
 WorkbenchManipulator.install()
 
-show()
+show_on_startup()

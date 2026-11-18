@@ -17,7 +17,4 @@ def install_translations() -> None:
         msg = "Translations must be loaded only after GUI is up."
         raise RuntimeError(msg)
 
-    App.Gui.addLanguagePath(
-        str(Path(__file__).parent / "resources" / "translations")
-    )
-
+    App.Gui.addLanguagePath(str(Path(__file__).parent / "resources" / "translations"))

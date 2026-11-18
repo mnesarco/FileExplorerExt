@@ -18,7 +18,8 @@ import FreeCADGui as Gui
 from ._explorer import toggle
 from ._intl import tr
 from ._qt import QtCompat, qtw
-from ._api import ApiState
+from ._api import API
+
 
 class FEE_ToggleExplorer:
     """
@@ -47,9 +48,7 @@ class FEE_ToggleExplorer:
 
     @property
     def Shortcut(self) -> str:
-        return App.ParamGet(
-            "User parameter:BaseApp/Preferences/Shortcut"
-        ).GetString(
+        return App.ParamGet("User parameter:BaseApp/Preferences/Shortcut").GetString(
             self.Name(),
             self.DefaultAccel,
         )
@@ -77,9 +76,7 @@ class FEE_SaveSession:
 
     def GetResources(self) -> dict[str, str]:
         return {
-            "Pixmap": str(
-                Path(__file__).parent / "resources" / "icons" / "save-list.svg"
-            ),
+            "Pixmap": str(Path(__file__).parent / "resources" / "icons" / "save-list.svg"),
             "MenuText": tr("FileExplorerExt", "Save open file list (session)"),
             "ToolTip": tr("FileExplorerExt", "Save open file list (session)"),
             "Accel": self.Shortcut,
@@ -90,14 +87,14 @@ class FEE_SaveSession:
         file, _ = qtw.QFileDialog.getSaveFileName(
             App.Gui.getMainWindow(),
             tr("FileExplorerExt", "Save open file paths as a list (session)"),
-            str(ApiState.selected_path or ""),
+            str(API.selected_path or ""),
             filter,
             filter,
         )
         if file:
             from ._fclist import FCListImportHandler
-            FCListImportHandler.save(file)
 
+            FCListImportHandler.save(file)
 
     def IsActive(self) -> bool:
         return bool(App.listDocuments())
@@ -108,9 +105,7 @@ class FEE_SaveSession:
 
     @property
     def Shortcut(self) -> str:
-        return App.ParamGet(
-            "User parameter:BaseApp/Preferences/Shortcut"
-        ).GetString(
+        return App.ParamGet("User parameter:BaseApp/Preferences/Shortcut").GetString(
             self.Name(),
             self.DefaultAccel,
         )

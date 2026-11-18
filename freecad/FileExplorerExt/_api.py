@@ -11,6 +11,8 @@ from pathlib import Path
 from dataclasses import dataclass, field
 from typing import TypeAlias, Callable
 
+import FreeCAD as App  # type: ignore
+
 FileActionFn: TypeAlias = Callable[[list[Path]], None]
 
 
@@ -27,9 +29,7 @@ CustomActionProvider: TypeAlias = Callable[[list[Path]], list[_CustomFileAction]
 @dataclass
 class ApiState:
     selected_path: Path | None = None
-    action_providers: dict[object, CustomActionProvider] = field(
-        default_factory=dict
-    )
+    action_providers: dict[object, CustomActionProvider] = field(default_factory=dict)
 
 
 class FileExplorerApi:
@@ -43,6 +43,9 @@ class FileExplorerApi:
     def selected_path(self) -> Path | None:
         return self._state.selected_path
 
+    def set_selected_path(self, path: str | Path | None) -> None:
+        self._state.selected_path = Path(path) if path else None
+
     def add_action_provider(self, provider: CustomActionProvider, key: object = None) -> None:
         self._state.action_providers[key or object()] = provider
 
@@ -52,7 +55,11 @@ class FileExplorerApi:
             return actions
 
         for provider in self._state.action_providers.values():
-            provided = provider(paths)
+            try:
+                provided = provider(paths)
+            except Exception as e:
+                App.Console.PrintWarning(f"File Explorer: custom action provider failed: {e}\n")
+                continue
             if provided:
                 actions.extend(provided)
 

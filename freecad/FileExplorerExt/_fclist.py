@@ -41,17 +41,13 @@ class FCListImportHandler:
                 path = parent / path
 
             if not path.exists():
-                App.Console.PrintWarning(
-                    f"File does not exists {container!s}:{line}: {path!s}\n"
-                )
+                App.Console.PrintWarning(f"File does not exists {container!s}:{line}: {path!s}\n")
                 continue
 
             try:
                 path = path.resolve()
             except Exception:
-                App.Console.PrintWarning(
-                    f"File does not exists {container!s}:{line}: {path!s}\n"
-                )
+                App.Console.PrintWarning(f"File does not exists {container!s}:{line}: {path!s}\n")
                 continue
 
             if path.suffix.lower() == ".fclist":
@@ -90,7 +86,7 @@ class FCListImportHandler:
                 lines.append(str(path.relative_to(parent)))
             else:
                 lines.append(str(path))
-        container.with_suffix(".fclist").write_text("\n".join(lines))
+        container.with_suffix(".fclist").write_text("\n".join(lines), encoding="utf-8")
 
     @staticmethod
     def install():

@@ -9,6 +9,7 @@ FileExplorerExt: Application style.
 from ._qt import qtg, qtw
 from pathlib import Path
 
+
 class Icons:
     standardIcon = qtw.QApplication.style().standardIcon
     fromTheme = qtg.QIcon.fromTheme
@@ -32,11 +33,15 @@ class Icons:
     NavBack = customIcon("back")
     NavForward = customIcon("forward")
     Trash = customIcon("trash")
+    Delete = customIcon("delete")
     Rename = customIcon("rename")
     Save = customIcon("save")
+    SaveList = customIcon("save-list")
     NewFolder = customIcon("new-folder")
-    PlayMacro = customIcon("play-macro")
     RecentFiles = customIcon("recent-files")
     FCList = customIcon("fclist")
-    Preview = customIcon("eye")
-    PreviewOff = customIcon("eye-off")
+    Preview = customIcon("preview-on")
+    PreviewOff = customIcon("preview-off")
+    Lock = customIcon("lock")
+    Unlock = customIcon("unlock")
+    Refresh = customIcon("refresh")

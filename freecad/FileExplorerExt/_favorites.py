@@ -9,7 +9,7 @@ FileExplorerExt: Favorites.
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
@@ -29,6 +29,8 @@ class Favorite:
     name: str = ""
     kind: Literal["user", "root", "home", "macro", "work", "recent"] = "user"
     order: int = 2
+    # Cached: data() is called on every repaint and must never touch the disk.
+    missing: bool = field(default=False, init=False, compare=False, repr=False)
 
     def __post_init__(self) -> None:
         if not self.name and isinstance(self.path, str):
@@ -43,6 +45,10 @@ class Favorite:
         if self.kind == "recent":
             return tr("FileExplorerExt", "Recent files")
         return self.path_str
+
+    def refresh_missing(self) -> None:
+        """Stat the folder. Call only from explicit refresh points, never from data()."""
+        self.missing = self.kind == "user" and not Path(self.path_str).is_dir()
 
     @staticmethod
     def working_dir() -> str:
@@ -118,6 +124,17 @@ class FavoritesModel(qtc.QAbstractListModel):
             "work": Icons.WorkingDir,
             "recent": Icons.RecentFiles,
         }
+        self.refresh_missing()
+
+    def refresh_missing(self) -> None:
+        """Re-stat user favorites and repaint only if something changed."""
+        changed = False
+        for fav in self._items:
+            before = fav.missing
+            fav.refresh_missing()
+            changed |= fav.missing != before
+        if changed:
+            self.dataChanged.emit(self.index(0, 0), self.index(len(self._items) - 1, 0))
 
     def rowCount(
         self,
@@ -138,19 +155,22 @@ class FavoritesModel(qtc.QAbstractListModel):
         item = self._items[index.row()]
         match role:
             case Role.DisplayRole:
+                if item.missing:
+                    missing = tr("FileExplorerExt", "missing")
+                    return f"{item.name} ({missing})"
                 return item.name
             case Role.DecorationRole:
                 return self.icons.get(item.kind, None)
             case Role.UserRole:
                 return item
             case Role.ToolTipRole:
+                if item.missing:
+                    return tr("FileExplorerExt", "Missing: {}").format(item.path_str)
                 return item.tooltip
             case _:
                 return None
 
-    def flags(
-        self, index: qtc.QModelIndex | qtc.QPersistentModelIndex
-    ) -> QtCompat.ItemFlag:
+    def flags(self, index: qtc.QModelIndex | qtc.QPersistentModelIndex) -> QtCompat.ItemFlag:
         default_flags = super().flags(index)
         if index.isValid():
             item = self._items[index.row()]
@@ -186,6 +206,7 @@ class FavoritesModel(qtc.QAbstractListModel):
             if it.path_str == fav.path_str and it.name == fav.name:
                 raise DuplicatedFavoriteError
 
+        fav.refresh_missing()
         row = len(self._items)
         self.beginInsertRows(qtc.QModelIndex(), row, row)
         self._items.append(fav)
@@ -196,17 +217,6 @@ class FavoritesModel(qtc.QAbstractListModel):
             self.beginRemoveRows(qtc.QModelIndex(), row, row)
             del self._items[row]
             self.endRemoveRows()
-
-    def clear(self) -> None:
-        if self._items:
-            self.beginResetModel()
-            self._items.clear()
-            self.endResetModel()
-
-    def setItems(self, items: list[Favorite]) -> None:
-        self.beginResetModel()
-        self._items = list(items)
-        self.endResetModel()
 
     def getItem(self, row: int) -> Favorite | None:
         if 0 <= row < len(self._items):
@@ -227,9 +237,7 @@ class FavoritesModel(qtc.QAbstractListModel):
 
     def moveItem(self, from_row: int, to_row: int) -> bool:
         """Move an item from one position to another. Only user favorites can be moved."""
-        if not (
-            0 <= from_row < len(self._items) and 0 <= to_row < len(self._items)
-        ):
+        if not (0 <= from_row < len(self._items) and 0 <= to_row < len(self._items)):
             return False
 
         # Don't allow moving system favorites (root, home, macro)
@@ -275,9 +283,7 @@ class FavoritesWidget(qtw.QListView):
     ) -> None:
         super().__init__(parent)
         self.setObjectName("FileExplorerExt_Favorites")
-        user_data = [
-            Favorite(path, name) for path, name in state.get_favorites()
-        ]
+        user_data = [Favorite(path, name) for path, name in state.get_favorites()]
         self._model = FavoritesModel(user_data, self)
         self._state = state
         self.setModel(self._model)
@@ -290,8 +296,12 @@ class FavoritesWidget(qtw.QListView):
         self.customContextMenuRequested.connect(self.on_context_menu)
         self.setIconSize(qtc.QSize(16, 16))
         self.setSpacing(2)
+        self.setHorizontalScrollBarPolicy(QtCompat.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setTextElideMode(QtCompat.TextElideMode.ElideMiddle)
+        self.setWordWrap(False)
+        self.setResizeMode(QtCompat.ListView_ResizeMode.Adjust)
 
-        self.activated.connect(self.on_activated)
+        # clicked only: 'activated' also fires on double click, which clicked covers.
         self.clicked.connect(self.on_activated)
 
         state.tree_root_changed.connect(self.on_tree_root_changed)
@@ -306,6 +316,7 @@ class FavoritesWidget(qtw.QListView):
 
     def showEvent(self, e):
         App.addDocumentObserver(self)
+        self._model.refresh_missing()
         self.slotActivateDocument(None)
         super().showEvent(e)
 
@@ -314,23 +325,52 @@ class FavoritesWidget(qtw.QListView):
         super().hideEvent(e)
 
     def on_tree_root_changed(self, path: str) -> None:
+        self._model.refresh_missing()
         index = self._model.findIndex(path)
         if index and index.isValid():
-            self.selectionModel().select(
-                index, QtCompat.SelectionFlag.ClearAndSelect
-            )
+            self.selectionModel().select(index, QtCompat.SelectionFlag.ClearAndSelect)
         else:
             self.selectionModel().clear()
+
+    def keyPressEvent(self, event: qtg.QKeyEvent) -> None:
+        # 'activated' is not connected (it also fires on double click), so Enter
+        # must open the highlighted favorite explicitly.
+        if event.key() in (QtCompat.Key_Return, QtCompat.Key_Enter):
+            event.accept()
+            self.on_activated(self.currentIndex())
+            return
+        super().keyPressEvent(event)
 
     def on_activated(self, index: qtc.QModelIndex) -> None:
         if index.isValid():
             item = self._model.getItem(index.row())
             if item:
+                # One stat on a user click keeps the cached flag honest.
+                item.refresh_missing()
+                if item.missing:
+                    self.offer_remove_missing(index, item)
+                    return
                 if item.kind == "recent":
                     self._state.request_recent_files.emit()
                 else:
                     self._state.request_root_change.emit(item.path_str)
                     self._state.request_show_tree.emit()
+
+    def offer_remove_missing(self, index: qtc.QModelIndex, item: Favorite) -> None:
+        if (
+            qtw.QMessageBox.question(
+                self,
+                tr("FileExplorerExt", "Missing favorite"),
+                tr(
+                    "FileExplorerExt",
+                    "The folder '{}' no longer exists. Remove it from favorites?",
+                ).format(item.path_str),
+                QtCompat.StandardButton.Yes | QtCompat.StandardButton.No,
+                QtCompat.StandardButton.No,
+            )
+            == QtCompat.StandardButton.Yes
+        ):
+            self.remove_favorite(index)
 
     def dragEnterEvent(self, event: qtg.QDragEnterEvent) -> None:
         if event.mimeData().hasUrls() or event.mimeData().hasText():
@@ -344,21 +384,14 @@ class FavoritesWidget(qtw.QListView):
         mime_data = event.mimeData()
 
         # Check if this is an internal move (reordering)
-        if (
-            event.source() == self
-            and event.proposedAction() == QtCompat.DropAction.MoveAction
-        ):
+        if event.source() == self and event.proposedAction() == QtCompat.DropAction.MoveAction:
             drop_index = self.indexAt(QtCompat.get_event_pos(event))
             current_index = self.currentIndex()
 
             if current_index.isValid():
                 from_row = current_index.row()
                 # If dropping between items, use the index; if on an item, insert before it
-                to_row = (
-                    drop_index.row()
-                    if drop_index.isValid()
-                    else len(self._model._items) - 1
-                )
+                to_row = drop_index.row() if drop_index.isValid() else len(self._model._items) - 1
 
                 if self._model.moveItem(from_row, to_row):
                     self._state.save_favorites(self._model.get_state())
@@ -410,6 +443,14 @@ class FavoritesWidget(qtw.QListView):
             lambda: self.rename_favorite(index),
         )
 
+        browse = QtCompat.addAction(
+            menu,
+            Icons.SysOpen,
+            tr("FileExplorerExt", "Browse"),
+            lambda: self._state.open_with_sys_app(fav.path_str),
+        )
+        browse.setEnabled(not fav.missing)
+
         QtCompat.addAction(
             menu,
             Icons.Trash,
@@ -420,7 +461,7 @@ class FavoritesWidget(qtw.QListView):
         QtCompat.addAction(
             menu,
             Icons.DefaultDir,
-            tr("FileExplorerExt", "Set as default dir"),
+            tr("FileExplorerExt", "Set as startup folder"),
             lambda: self._state.set_default_dir(fav.path_str),
         )
 

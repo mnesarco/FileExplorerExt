@@ -5,14 +5,10 @@ license: CCO-1.0
 """
 
 import argparse
-import os
-import re
 import shutil
 import sys
-import textwrap
+import tempfile
 from pathlib import Path
-
-import scour.scour
 
 OPTIMIZER_AVAILABLE = True
 try:
@@ -21,69 +17,37 @@ try:
     print(f"Optimization is available: scour-{scour.__version__}")
 except ImportError:
     OPTIMIZER_AVAILABLE = False
-    print(
-        "Optimization is disabled. Consider installing scour", file=sys.stderr
-    )
-
-SVG_PATTERN = re.compile(r"^.*\.svg$", re.IGNORECASE)
+    print("Optimization is disabled. Consider installing scour", file=sys.stderr)
 
 
-def optimize(src_dir: Path, icons_dir: Path, base_dir: Path):
+def optimize(icons_dir: Path, out_dir: Path) -> None:
+    """Write an optimized copy of every icon into out_dir."""
     from scour import scour
 
-    for root, dirs, files in os.walk(src_dir):
-        path = Path(root).relative_to(base_dir)
-        dest = icons_dir / path
-        if not dest.exists():
-            dest.mkdir(parents=True)
-        for file in files:
-            if SVG_PATTERN.fullmatch(file):
-                with open(base_dir / path / file, "r") as fin:
-                    svg = scour.scourString(fin.read())
-                    with open(dest / file, "w") as fout:
-                        fout.write(svg)
-            else:
-                shutil.copy(base_dir / path / file, dest / file)
+    for icon in icons_dir.glob("*.svg"):
+        with icon.open(encoding="utf-8") as fin:
+            optimized = scour.scourString(fin.read())
+        (out_dir / icon.name).write_text(optimized, encoding="utf-8")
 
 
-def build(icons_dir: Path, base_dir: Path):
-    names = []
-    for root, dirs, files in os.walk(icons_dir):
-        path = Path(root).relative_to(base_dir)
-        for file in files:
-            names.append(f"<file>./{path / file}</file>\n")
-
-    with open(base_dir / "icons.qrc", "w") as out:
-        template = f"""\
-        <RCC>
-          <qresource>
-            {"            ".join(sorted(names))}
-          </qresource>
-        </RCC>
-        """
-        out.write(textwrap.dedent(template))
-
-
-def main(optimized: bool = True):
-    base_dir = Path(__file__).parent
-    src_dir = base_dir / "icons"
-    if optimized:
-        icons_dir = base_dir / "build"
-        if icons_dir.exists():
-            shutil.rmtree(icons_dir)
-        icons_dir.mkdir()
-        optimize(src_dir, icons_dir, base_dir)
-    else:
+def main(optimized: bool = True) -> None:
+    icons_dir = Path(__file__).parent / "icons"
+    if not optimized:
         print("Optimization is disabled")
-        icons_dir = src_dir
-    # build(icons_dir, base_dir)
+        return
+
+    # Optimize into a temp dir first, so a failure cannot leave broken icons behind.
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp)
+        optimize(icons_dir, out_dir)
+        for icon in out_dir.glob("*.svg"):
+            shutil.copy2(icon, icons_dir / icon.name)
+
+    print(f"Optimized {len(list(icons_dir.glob('*.svg')))} icons in {icons_dir}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Generate .qrc file, optionally with optimized icons",
-        epilog="A directory.qrc file will be generated in the current directory",
-    )
+    parser = argparse.ArgumentParser(description="Optimize the addon icons in place")
     parser.add_argument(
         "--no-opt",
         help="Disables optimization",
